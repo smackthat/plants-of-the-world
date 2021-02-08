@@ -54,12 +54,15 @@ body {
   }
 
   .region {
-    fill: #aaa;
+    fill: teal;
     stroke: #ddd;
     stroke-width: 0.5;
   }
+  .region:hover {
+    fill: yellow;
+  }
 
   .water {
-    fill: blue;
+    fill: url(#waterGradient)
   }
   
