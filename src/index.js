@@ -9,114 +9,33 @@ import { select as d3select } from 'd3-selection';
 
 //#region Main thang
 
-// const Context = React.createContext(null);
-
-// export function Stage({ size, children }) {
-//   const svgRef = useRef(null);
-//   const [svg, setSvg] = useState(null);
-
-//   useEffect(() => setSvg(svgRef.current), []);
-
-//   return (
-//     <svg ref={svgRef} width={size} height={size}>
-//       <Context.Provider value={svg}>{children}</Context.Provider>
-//     </svg>
-//   )
-// }
-
-// export function useSvg() {
-//   return React.useContext(Context)
-// }
-
-// export function Container({ projection, children }) {
-
-//   const svgElement = useSvg();
-//   const [{ x, y, k }, setTransform] = useState({ x: 120, y: 40, k: 1 });
-//   const [{ rx, ry }, setRotate] = useState({ rx: 0, ry: 0 });
-
-//   useEffect(() => {
-//     if (!svgElement) return;
-//     const selection = d3select(svgElement);
-
-//     const zoom = d3zoom.zoom().on("zoom", function (e) {
-//       console.log('Kutsutaan! ', e);
-//       setTransform(e.transform)
-//     });
-
-//     const drag = d3drag.drag()
-//       .on('drag', (event) => {
-//         let rotate = projection.rotate();
-
-//         console.log(event);
-//         projection.rotate(event.x, -event.y, rotate[2])
-
-//         setRotate({ rx: event.x, ry: -event.y });
-//         // setGeographies(geoJson.features.filter(x => x.properties.LEVEL3_COD !== 'TUA' && x.properties.LEVEL3_COD !== 'KRA'));
-//       });
-
-//     selection.call(zoom);
-//     selection.call(drag);
-//     return () => {
-//       selection.on("zoom", null);
-//       selection.on("drag", null);
-//     }
-//   }, [svgElement, projection])
-
-//   return <g className="regions" transform={`translate(${x}, ${y}) scale(${k}) rotate(${rx}, ${ry}, ${ry})`}>{children}</g>
-// }
-
-
-
 export function Globe({ size, geoJson }) {
 
-  const [geographies, setGeographies] = useState(geoJson.features.filter(x => x.properties.LEVEL3_COD !== 'TUA' && x.properties.LEVEL3_COD !== 'KRA'));
   const [{ x, y, z }, setRotate] = useState({ x: 0, y: 0, z: 0 });
-  const [scale, setScale] = useState(1);
-  const [{ tx, ty, s }, setTranslate] = useState({ tx: 0, ty: 0, s: 100 });
+  const [scale, setScale] = useState(200);
 
   const svgRef = useRef(null);
-  const sens = 0.25;
-
-  // console.log(x);
-  // console.log(y);
-
-  console.log('S on nyt: ', s);
+  const sens = 0.20;
 
   let projection = d3geo.geoOrthographic()
-    // .clipAngle(90)
-    .scale(s)
+    .scale(scale)
     .translate([size/2, size/2])
     .rotate([x, y, z])
-    // .fitSize([size, size], geoJson);
-
-  // console.log(projection);
-
-  // window.requestAnimationFrame(() => {
-  //   setRotate({ x: x + 0.1, y: y });
-  // })
 
   let drag = d3drag.drag()
     .subject(() => {
       var r = projection.rotate();
-      // console.log('ROO? ', r);
-      return { x: r[0] / 0.25, y: -r[1] / 0.25 };
+      return { x: r[0] / sens, y: -r[1] / sens };
     })
     .on('drag', (event) => {
       let rotate = projection.rotate();
-
-      // console.log(rotate);
-      // console.log(event);
-      // projection.rotate(event.x, -event.y, rotate[2])
-
-      setRotate({ x: event.x * 0.25, y: -event.y * 0.25, z: rotate[2] });
-      // setGeographies(geoJson.features.filter(x => x.properties.LEVEL3_COD !== 'TUA' && x.properties.LEVEL3_COD !== 'KRA'));
+      setRotate({ x: event.x * sens, y: -event.y * sens, z: rotate[2] });
     });
 
   let zoom = d3zoom.zoom()
-    .scaleExtent([100, 700])
+    .scaleExtent([200, 800])
     .on('zoom', (e) => {
-      console.log(e);
-      setTranslate({ tx: e.transform.x, ty: e.transform.y, s: e.transform.k })
+      setScale(e.transform.k)
     })
 
   useEffect(() => {
@@ -136,12 +55,13 @@ export function Globe({ size, geoJson }) {
       <g className="regions">
         <path className="water" d={d3geo.geoPath().projection(projection)({ type: 'Sphere' })}>
         </path>
-        {geographies.map((d, i) =>
+        {geoJson.features.map((d, i) =>
           <path
             key={d.properties.LEVEL3_COD}
             id={i + d.properties.LEVEL3_COD}
             d={d3geo.geoPath().projection(projection)(d)}
             className="region">
+              <title>{d.properties.LEVEL3_NAM}</title>
           </path>
         )}
       </g>
@@ -247,33 +167,15 @@ export function Globe({ size, geoJson }) {
 d3fetch.json('./assets/level3.json').then((json) => {
 
   console.log(json);
-  // console.log('ERR: ', err);
-
-  // let projection = d3geo.geoOrthographic()
-  // .clipAngle(90)
-  // .rotate([0, 0])
-  // .fitSize([600, 600], json);
+  // BUG with the geoJson: have to take out Tuamotu and Krasnoyarks since their coordinates are faulty and cause them to leak all over the globe... 
+  json.features = json.features.filter(x => x.properties.LEVEL3_COD !== 'KRA' && x.properties.LEVEL3_COD !== 'TUA');
 
   ReactDOM.render(
     <Globe
-      size={600}
+      size={800}
       geoJson={json}
     >
     </Globe>,
-    // <Stage size={600}>
-    //   <Container projection={projection}>
-    //   <path className="water" d={d3geo.geoPath().projection(projection)({ type: 'Sphere' })}></path>
-    //   {json.features.filter(x => x.properties.LEVEL3_COD !== 'TUA' && x.properties.LEVEL3_COD !== 'KRA').map((d, i) =>
-    //       <path
-    //         key={d.properties.LEVEL3_COD}
-    //         id={i + d.properties.LEVEL3_COD}
-    //         d={d3geo.geoPath().projection(projection)(d)}
-    //         className="region"
-    //       >
-    //       </path>
-    //     )}
-    //   </Container>
-    // </Stage>,
     document.getElementById('root')
   );
 });
