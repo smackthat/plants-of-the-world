@@ -24,7 +24,7 @@ export function Globe({ size, geoJson }) {
 
   let drag = d3drag.drag()
     .subject(() => {
-      var r = projection.rotate();
+      let r = projection.rotate();
       return { x: r[0] / sens, y: -r[1] / sens };
     })
     .on('drag', (event) => {
@@ -174,8 +174,7 @@ d3fetch.json('./assets/level3.json').then((json) => {
     <Globe
       size={800}
       geoJson={json}
-    >
-    </Globe>,
+    ></Globe>,
     document.getElementById('root')
   );
 });

@@ -45,6 +45,7 @@ body {
   }
   
   .game {
+    float: right;
     display: flex;
     flex-direction: row;
   }
