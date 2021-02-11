@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import './index.css';
-import Globe from './hooks/globe';
+import Globe from './components/globe';
 import level4 from './assets/level4.js'
 
 // d3fetch.json('./assets/level3.json').then((json) => {
