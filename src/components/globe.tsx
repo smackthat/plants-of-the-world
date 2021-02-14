@@ -1,12 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import * as d3geo from 'd3-geo';
 import * as d3transition from 'd3-transition';
 import { interpolate as d3interpolate } from 'd3-interpolate';
 import *  as d3drag from 'd3-drag';
 import * as d3zoom from 'd3-zoom';
 import { select as d3select } from 'd3-selection';
+import { IMainContext, MainContext } from "../context/maincontext";
 
 export default function Globe({ size, geoJson }) {
+
+    const context: IMainContext = useContext(MainContext);
 
     const [{ x, y, z }, setRotate] = useState({ x: 0, y: 0, z: 0 });
     const [scale, setScale] = useState(300);
@@ -52,6 +55,11 @@ export default function Globe({ size, geoJson }) {
 
         let region = geoJson.features.filter(x => x.properties.Level4_cod === e.target.id)[0];
         let centroid = d3geo.geoCentroid(region);
+        let bounds = d3geo.geoPath().projection(projection).bounds(region);
+
+        let nextScale = projection.scale() * 1 / Math.max((bounds[1][0] - bounds[0][0]) / (size/4), (bounds[1][1] - bounds[0][1]) / (size/4));
+
+        context.setRegion({regionIdentifier: region.properties.Level3_cod, regionName: region.properties.Level_4_Na});
 
         // Smooth rotate and zoom
         (function transition() {
@@ -59,9 +67,13 @@ export default function Globe({ size, geoJson }) {
                 .duration(1000)
                 .tween("rotate", () => {
 
-                    var distance = d3interpolate(projection.rotate(), [-centroid[0], -centroid[1]]);
-                    var z = d3interpolate(projection.scale(), 800)
+                    let distance = d3interpolate(projection.rotate(), [-centroid[0], -centroid[1]]);
+                    let z = d3interpolate(projection.scale(), nextScale)
+
                     return (t: number) => {
+
+                        console.log(t);
+
                         const a = distance(t);
                         const b = z(t);
 

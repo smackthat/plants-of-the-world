@@ -1,22 +1,30 @@
 import ReactDOM from 'react-dom';
 import './index.css';
 import Globe from './components/globe';
-import level4 from './assets/level4.js'
+import regions from './assets/regions';
+import React from 'react';
+import { Grid } from '@material-ui/core';
+import Information from './components/information';
+import MainContextProvider from './context/maincontext';
 
-// d3fetch.json('./assets/level3.json').then((json) => {
+console.log(regions);
+// BUG with the geoJson: have to take out Tuamotu and Krasnoyarks since their coordinates are faulty and cause them to leak all over the globe... 
+regions.features = regions.features.filter(x => x.properties.Level4_cod !== 'KRA-OO' && x.properties.Level4_cod !== 'TUA-OO');
 
-  // console.log(json);
-  console.log(level4);
-  // BUG with the geoJson: have to take out Tuamotu and Krasnoyarks since their coordinates are faulty and cause them to leak all over the globe... 
-  level4.features = level4.features.filter(x => x.properties.Level4_cod !== 'KRA-OO' && x.properties.Level4_cod !== 'TUA-OO');
-
-  ReactDOM.render(
-    <Globe
-      size={800}
-      geoJson={level4}
-    ></Globe>,
-    document.getElementById('root')
-  );
-// });
-
+ReactDOM.render(
+  <MainContextProvider>
+    <Grid container spacing={3}>
+      <Grid item xs={6}>
+        <Globe
+          size={800}
+          geoJson={regions}
+        ></Globe>
+      </Grid>
+      <Grid item xs={4}>
+        <Information></Information>
+      </Grid>
+    </Grid>
+  </MainContextProvider>,
+  document.getElementById('root')
+);
 

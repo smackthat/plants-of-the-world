@@ -4,6 +4,7 @@
     "module": "esnext",
     "strict": true,
     "noImplicitAny": false,
+    "strictNullChecks": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
