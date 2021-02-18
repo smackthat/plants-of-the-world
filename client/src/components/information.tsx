@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, Typography } from "@material-ui/core";
-import React, { useContext } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { IMainContext, MainContext } from "../context/maincontext";
 
 export default function Information() {
 
-    const a: IMainContext = useContext(MainContext);
+    const a: IMainContext = useContext(MainContext);   
 
     return (
         <Card>

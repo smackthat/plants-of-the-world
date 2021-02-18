@@ -60,6 +60,7 @@ export default function Globe({ size, geoJson }) {
         let nextScale = projection.scale() * 1 / Math.max((bounds[1][0] - bounds[0][0]) / (size/4), (bounds[1][1] - bounds[0][1]) / (size/4));
 
         context.setRegion({regionIdentifier: region.properties.Level3_cod, regionName: region.properties.Level_4_Na});
+        context.getAuth();
 
         // Smooth rotate and zoom
         (function transition() {
@@ -77,7 +78,7 @@ export default function Globe({ size, geoJson }) {
                         const a = distance(t);
                         const b = z(t);
 
-                        setRotate({ x: a[0], y: a[1], z: 1 });
+                        setRotate({ x: a[0], y: a[1], z: 0 });
                         setScale(b);
                     };
                 })

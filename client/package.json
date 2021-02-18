@@ -1,0 +1,60 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "proxy": "http://localhost:3001/",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.3",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.3",
+    "@testing-library/user-event": "^12.6.2",
+    "@types/d3-drag": "^2.0.0",
+    "@types/d3-geo": "^2.0.0",
+    "@types/d3-interpolate": "^2.0.0",
+    "@types/d3-transition": "^2.0.0",
+    "@types/d3-zoom": "^2.0.0",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.25",
+    "@types/react": "^17.0.1",
+    "@types/react-dom": "^17.0.0",
+    "axios": "^0.21.1",
+    "d3-drag": "^2.0.0",
+    "d3-fetch": "^2.0.0",
+    "d3-geo": "^2.0.1",
+    "d3-interpolate": "^2.0.1",
+    "d3-selection": "^2.0.0",
+    "d3-transition": "^2.0.0",
+    "d3-zoom": "^2.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "4.0.1",
+    "web-vitals": "^0.2.4"
+  },
+  "scripts": {
+    "start": "react-scripts start --watch --watch-poll",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "typescript": "^4.1.3"
+  }
+}
