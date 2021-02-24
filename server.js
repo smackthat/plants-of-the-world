@@ -1,38 +1,18 @@
 const express = require('express');
-const https = require('https');
+const fetch = require('node-fetch');
 require('dotenv').config();
-
-// console.log(process.env.TREFLE_API_KEY);
 
 const app = express();
 app.set("port", process.env.PORT || 3001);
 
-app.get("/api/test", (req, res) => {
+app.get("/api/plants/forRegion/:regionId", async (req, res) => {
 
-    // console.log('Got a request! ', req);
-    res.status(500).json([]);
-});
-
-/** Gets Trefle API JWT token */
-app.get("/api/auth", (req, res) => {
-
-    const params = {
-        origin: process.env.SITE_ORIGIN,
-        ip: req.ip,
-        token: process.env.TREFLE_API_KEY
-    };
-
-    console.log('Params? ', params)
-
-    var request = https.request("https://trefle.io/api/auth/claim", {
-        method: 'post',
-        body: JSON.stringify(params),
-        headers: { 'Content-Type': 'application/json' }
-    }, function (res) {
-        console.log(res);
-        res.json(res);
-
-    });
+    const regionId = req.params.regionId;
+    const page = req.query.page || 1;
+    const response = await fetch(`https://trefle.io/api/v1/distributions/${regionId}/plants?filter%5Bestablishment%5D=native&token=${process.env.TREFLE_API_KEY}&page=${page}`);
+    
+    let json = await response.json();
+    res.status(200).json(json);
 });
 
 app.listen(app.get("port"), () => {
