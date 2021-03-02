@@ -66,4 +66,8 @@ body {
   .water {
     fill: url(#waterGradient)
   }
+
+  .footer {
+    background-color: yellow;
+  }
   

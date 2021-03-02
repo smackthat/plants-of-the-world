@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { Species } from "../interfaces/trefle.interface";
 
 
@@ -24,33 +24,41 @@ export default class ApiService {
 
     //#endregion Constructor
 
-    // NOT IN USE: Trefle API doesn't accept JWT tokens from the client side... so let's use the server for ALL of the API calls.
-    // public async getAuth(): Promise<any> {
-    //     try {
-    //         let token = await axios.get('api/auth');
-    //         console.log('TADAA! ', token);
-    //         localStorage.setItem('trefleToken', JSON.stringify(token.data));
-    //     } catch (error) {
-    //         throw new Error(error);
-    //     }
-
-    // }
+    //#region  Public methods
 
     public async getPlantsForRegion(regionId: string, page: number = 1): Promise<ResultWithMeta<Species>> {
-        try {
-            const plants = await axios.get(`api/plants/forRegion/${regionId}`, {
-                params: {
-                    page
-                }
-            });
 
-            console.log('PLÄNTS: ', plants.data);
-            return plants.data;
+        const plants = await this.get(`api/plants/forRegion/${regionId}`, {
+            params: {
+                page
+            }
+        });
+        return plants.data;
+    }
+
+    public async getPlant(plantId: number): Promise<Species> {
+        const plant = await this.get(`api/plants/${plantId}`)
+        return plant.data;
+    }
+
+    //#endregion Public methods
+
+    //#region Private methods
+
+    /** Runs a get request */
+    private async get(url: string, config?: AxiosRequestConfig) {
+        try {
+            const result = await axios.get(url, config);
+
+            console.log('RESULTO: ', result);
+            return result;
         } catch (error) {
             throw new Error(error);
         }
-
     }
+
+
+    //#endregion Private methods
 
 
 
