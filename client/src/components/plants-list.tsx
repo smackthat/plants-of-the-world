@@ -1,8 +1,9 @@
-import { Avatar, Card, CardContent, CardHeader, createStyles, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Theme } from "@material-ui/core";
+import { Avatar, Card, CardContent, CardHeader, createStyles, IconButton, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Theme } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { IMainContext, MainContext } from "../context/maincontext";
 import { Species } from "../interfaces/trefle.interface";
+import ImageModal from "./image-modal";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -16,12 +17,12 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export default function PlantsList({region}) {
+export default function PlantsList({ region }) {
     const classes = useStyles();
 
     const a: IMainContext = useContext(MainContext);
     const listRef = useRef(null);
-    const { plants } = a; 
+    const { plants } = a;
 
     const pageSize: number = 20;
     const onPageChange = (page: number) => {
@@ -30,37 +31,46 @@ export default function PlantsList({region}) {
         listRef.current.scrollTop = 0;
     };
 
+    const [selectedImage, setSelectedImage] = useState(null);
+    const handleImageClick = (e) => {
+        setSelectedImage(e.target.currentSrc);
+    }
+
 
     return (
         <Card>
-        <CardHeader
-            title={"Plants of " + a.region.regionName}>
-        </CardHeader>
-        <CardContent>
+            <CardHeader
+                title={"Plants of " + a.region.regionName}>
+            </CardHeader>
+            <CardContent>
 
-            <List ref={listRef} style={{ maxHeight: '600px', overflow: 'auto' }}>
-                {plants.results.data.map((plant: Species) =>
-                    <ListItem key={plant.id}>
-                        <ListItemAvatar>
-                            <Avatar style={{ height: '90px', width: '90px' }} src={plant.image_url}></Avatar>
-                        </ListItemAvatar>
-                        <ListItemText style={{ marginLeft: '5em' }}>
-                            {plant.common_name ?? plant.scientific_name}
-                        </ListItemText>
-                    </ListItem>
-                )}
+            <ImageModal imgSrc={selectedImage} setImage={setSelectedImage}></ImageModal>
 
-            </List>
-            <Pagination
-                siblingCount={2}
-                page={plants.page}
-                count={Math.ceil(plants.results.meta.total / pageSize)}
-                onChange={(e, page) => onPageChange(page)}
-                color="primary"
-            ></Pagination>
+                <List ref={listRef} style={{ maxHeight: '600px', overflow: 'auto' }}>
+                    {plants.results.data.map((plant: Species) =>
+                        <ListItem key={plant.id}>
+                            <ListItemAvatar>
+                                <IconButton title="Show bigger image" onClick={(e) => handleImageClick(e)}>
+                                    <Avatar style={{ height: '90px', width: '90px' }} src={plant.image_url}></Avatar>
+                                </IconButton>
+                            </ListItemAvatar>
+                            <ListItemText style={{ marginLeft: '5em' }}>
+                                {plant.common_name ?? plant.scientific_name}
+                            </ListItemText>
+                        </ListItem>
+                    )}
 
-        </CardContent>
-    </Card>
+                </List>
+                <Pagination
+                    siblingCount={2}
+                    page={plants.page}
+                    count={Math.ceil(plants.results.meta.total / pageSize)}
+                    onChange={(e, page) => onPageChange(page)}
+                    color="primary"
+                ></Pagination>
+
+            </CardContent>
+        </Card>
 
     );
 }
