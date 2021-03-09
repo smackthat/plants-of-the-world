@@ -1,6 +1,7 @@
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
     margin: 20px;
+    background: linear-gradient(to bottom right, rgb(166, 231, 186), rgb(208, 243, 143));
   }
 
   #root {

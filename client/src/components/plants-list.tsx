@@ -1,24 +1,26 @@
-import { Avatar, Card, CardContent, CardHeader, createStyles, IconButton, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Theme } from "@material-ui/core";
+import { Avatar, Card, CardContent, CardHeader, createStyles, IconButton, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
-import React, { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { IMainContext, MainContext } from "../context/maincontext";
+import { IImage } from "../interfaces/image.interface";
 import { Species } from "../interfaces/trefle.interface";
 import ImageModal from "./image-modal";
+import PlantIcon from '../assets/icons/leaves.svg';
 
-const useStyles = makeStyles((theme: Theme) =>
+const textStyles = makeStyles(() =>
     createStyles({
-        root: {
-            width: '100%',
-            maxWidth: 360,
-            maxHeight: '100%',
-            overflow: 'auto',
-            backgroundColor: theme.palette.background.paper,
-        },
-    }),
+        primary: {
+            '&:hover': {
+                cursor: 'pointer'
+            }
+        }
+    })
 );
 
+
 export default function PlantsList({ region }) {
-    const classes = useStyles();
+
+    const textClasses = textStyles();
 
     const a: IMainContext = useContext(MainContext);
     const listRef = useRef(null);
@@ -31,10 +33,17 @@ export default function PlantsList({ region }) {
         listRef.current.scrollTop = 0;
     };
 
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState<IImage>(null);
     const handleImageClick = (e) => {
-        setSelectedImage(e.target.currentSrc);
+        
+        if (e.target && e.target.currentSrc && e.target.classList.length > 0) {
+            setSelectedImage({imgSrc: e.target.currentSrc});
+        }
     }
+
+    const handleTextClick = (e) => {
+        console.log('KLIKKI! ', e);
+    } 
 
 
     return (
@@ -44,17 +53,19 @@ export default function PlantsList({ region }) {
             </CardHeader>
             <CardContent>
 
-            <ImageModal imgSrc={selectedImage} setImage={setSelectedImage}></ImageModal>
+            <ImageModal img={selectedImage} setImage={setSelectedImage}></ImageModal>
 
                 <List ref={listRef} style={{ maxHeight: '600px', overflow: 'auto' }}>
                     {plants.results.data.map((plant: Species) =>
                         <ListItem key={plant.id}>
                             <ListItemAvatar>
                                 <IconButton title="Show bigger image" onClick={(e) => handleImageClick(e)}>
-                                    <Avatar style={{ height: '90px', width: '90px' }} src={plant.image_url}></Avatar>
+                                    <Avatar style={{ height: '90px', width: '90px' }} src={plant.image_url}>
+                                        <img src={PlantIcon} alt='P'></img>
+                                    </Avatar>
                                 </IconButton>
                             </ListItemAvatar>
-                            <ListItemText style={{ marginLeft: '5em' }}>
+                            <ListItemText className={textClasses.primary} onClick={(e) => handleTextClick(e)} style={{ marginLeft: '5em' }}>
                                 {plant.common_name ?? plant.scientific_name}
                             </ListItemText>
                         </ListItem>

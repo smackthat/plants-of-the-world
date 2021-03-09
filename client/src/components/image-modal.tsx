@@ -1,3 +1,4 @@
+import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Modal from "@material-ui/core/Modal";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export default function ImageModal({ imgSrc, setImage }) {
+export default function ImageModal({ img, setImage }) {
 
     const classes = useStyles();
     const [open, setOpen] = useState(false);
@@ -30,10 +31,10 @@ export default function ImageModal({ imgSrc, setImage }) {
     }
 
     useEffect(() => {
-        if (imgSrc) {
+        if (img) {
             setOpen(true);
         }
-    });
+    }, [img]);
 
     return (
 
@@ -41,13 +42,14 @@ export default function ImageModal({ imgSrc, setImage }) {
             className={classes.modal}
             open={open}
             onClose={handleClose}
+            BackdropComponent={Backdrop}
             BackdropProps={{
                 timeout: 500
             }}
             closeAfterTransition
         >
             <Fade in={open}>
-                <img style={{ maxHeight: '80%', width: 'auto' }} src={imgSrc}></img>
+                <img style={{ maxHeight: '80%', width: 'auto' }} src={img?.imgSrc} alt=''></img>
             </Fade>
 
         </Modal>
