@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Reducer, useCallback, useContext, useEffect, useMemo, useReducer, useRef } from "react";
 import * as d3geo from 'd3-geo';
 import * as d3transition from 'd3-transition';
 import { interpolate as d3interpolate } from 'd3-interpolate';
@@ -7,20 +7,29 @@ import * as d3zoom from 'd3-zoom';
 import { select as d3select } from 'd3-selection';
 import { IMainContext, MainContext } from "../context/maincontext";
 
+interface IGlobeState {
+    x: number;
+    y: number;
+    z: number;
+    scale: number;
+}
+
 export default function Globe({ size, geoJson }) {
 
     const context: IMainContext = useContext(MainContext);
 
-    const [{ x, y, z }, setRotate] = useState({ x: 0, y: 0, z: 0 });
-    const [scale, setScale] = useState(300);
+    const [state, setState] = useReducer<Reducer<IGlobeState, any>>(
+        (state, newState) => ({ ...state, ...newState }),
+        { x: 0, y: 0, z: 0, scale: 300 }
+    );
 
     const svgRef = useRef(null);
     const sens = useMemo(() => 0.40, []);
 
     const projection = d3geo.geoOrthographic()
-        .scale(scale)
+        .scale(state.scale)
         .translate([size / 2, size / 2])
-        .rotate([x, y, z])
+        .rotate([state.x, state.y, state.z])
 
     const drag = useMemo(() => {
         return d3drag.drag()
@@ -30,7 +39,7 @@ export default function Globe({ size, geoJson }) {
             })
             .on('drag', (event) => {
                 let rotate = projection.rotate();
-                setRotate({ x: event.x * sens, y: -event.y * sens, z: rotate[2] });
+                setState({ x: event.x * sens, y: -event.y * sens, z: rotate[2] });
             });
     }, [projection, sens]);
 
@@ -40,7 +49,7 @@ export default function Globe({ size, geoJson }) {
         return d3zoom.zoom()
             .scaleExtent([300, 900])
             .on('zoom', (e) => {
-                setScale(e.transform.k)
+                setState({ scale: e.transform.k })
             });
     }, []);
 
@@ -51,15 +60,15 @@ export default function Globe({ size, geoJson }) {
         svg.call((zoom as any));
     });
 
-    const handleClick = (e) => {
+    const handleClick = useCallback((e) => {
 
         let region = geoJson.features.filter(x => x.properties.Level4_cod === e.target.id)[0];
         let centroid = d3geo.geoCentroid(region);
         let bounds = d3geo.geoPath().projection(projection).bounds(region);
 
-        let nextScale = projection.scale() * 1 / Math.max((bounds[1][0] - bounds[0][0]) / (size/4), (bounds[1][1] - bounds[0][1]) / (size/4));
+        let nextScale = projection.scale() * 1 / Math.max((bounds[1][0] - bounds[0][0]) / (size / 4), (bounds[1][1] - bounds[0][1]) / (size / 4));
 
-        context.onRegionChanged({regionIdentifier: region.properties.Level3_cod, regionName: region.properties.Level_4_Na});
+        context.onRegionChanged({ regionIdentifier: region.properties.Level3_cod, regionName: region.properties.Level_4_Na });
 
         // Smooth rotate and zoom
         (function transition() {
@@ -77,12 +86,11 @@ export default function Globe({ size, geoJson }) {
                         const a = distance(t);
                         const b = z(t);
 
-                        setRotate({ x: a[0], y: a[1], z: 0 });
-                        setScale(b);
+                        setState({ x: a[0], y: a[1], z: 0, scale: b });
                     };
                 })
         })();
-    };
+    }, [context, geoJson.features, projection, size]);
 
     return (
         <svg ref={svgRef} width={size} height={size}>
