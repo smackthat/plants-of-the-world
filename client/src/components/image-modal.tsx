@@ -2,7 +2,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Modal from "@material-ui/core/Modal";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -49,7 +49,7 @@ export default function ImageModal({ img, setImage }) {
             closeAfterTransition
         >
             <Fade in={open}>
-                <img style={{ maxHeight: '80%', width: 'auto' }} src={img?.imgSrc} alt=''></img>
+                <img style={{ maxHeight: '80%', width: 'auto' }} title={img?.title} src={img?.imgSrc} alt=''></img>
             </Fade>
 
         </Modal>

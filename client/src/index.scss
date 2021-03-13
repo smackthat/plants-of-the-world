@@ -1,0 +1,36 @@
+body {
+    font: 14px "Century Gothic", Futura, sans-serif;
+    margin: 20px;
+    background: linear-gradient(to bottom right, rgb(166, 231, 186), rgb(208, 243, 143));
+  }
+
+  #root {
+    margin: 20px auto;
+  }
+  
+  ol, ul {
+    padding-left: 30px;
+  }
+
+  .region {
+    fill: teal;
+    stroke: #ddd;
+    stroke-width: 0.5;
+  }
+  .region:hover {
+    stroke-width: 1.5;
+  }
+
+  .water {
+    fill: url(#waterGradient)
+  }
+
+  .footer {
+    padding: auto;
+
+    > div {
+      text-align: end;
+      padding-right: 5em;
+    }
+  }
+  

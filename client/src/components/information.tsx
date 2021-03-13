@@ -1,14 +1,21 @@
 import { Card, CardContent, CardHeader, Typography } from "@material-ui/core";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { IMainContext, MainContext } from "../context/maincontext";
+import Plant from "./plant";
 import PlantsList from "./plants-list";
 
 export default function Information() {
 
     const a: IMainContext = useContext(MainContext);
-    const { region, plants } = a;
+    const { region, plants, plant } = a;
 
     console.log('REGION? ', region);
+
+    if (plant !== null) {
+        return (
+            <Plant></Plant>
+        )
+    }
 
     if (region !== null && plants !== null) {
         return (

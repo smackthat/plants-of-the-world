@@ -1,8 +1,7 @@
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.scss';
 import Globe from './components/globe';
 import regions from './assets/regions';
-import React from 'react';
 import { Grid } from '@material-ui/core';
 import Information from './components/information';
 import MainContextProvider from './context/maincontext';

@@ -81,8 +81,6 @@ export default function Globe({ size, geoJson }) {
 
                     return (t: number) => {
 
-                        console.log(t);
-
                         const a = distance(t);
                         const b = z(t);
 

@@ -1,11 +1,9 @@
-import { Avatar, Card, CardContent, CardHeader, createStyles, IconButton, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from "@material-ui/core";
+import { Card, CardContent, CardHeader, createStyles, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef} from "react";
 import { IMainContext, MainContext } from "../context/maincontext";
-import { IImage } from "../interfaces/image.interface";
 import { Species } from "../interfaces/trefle.interface";
-import ImageModal from "./image-modal";
-import PlantIcon from '../assets/icons/leaves.svg';
+import { PlantAvatar } from "./plant-avatar";
 
 const textStyles = makeStyles(() =>
     createStyles({
@@ -33,18 +31,9 @@ export default function PlantsList({ region }) {
         listRef.current.scrollTop = 0;
     };
 
-    const [selectedImage, setSelectedImage] = useState<IImage>(null);
-    const handleImageClick = (e) => {
-        
-        if (e.target && e.target.currentSrc && e.target.classList.length > 0) {
-            setSelectedImage({imgSrc: e.target.currentSrc});
-        }
+    const handleTextClick = (plantId: number) => {
+        a.onPlantSelected(plantId);
     }
-
-    const handleTextClick = (e) => {
-        console.log('KLIKKI! ', e);
-    } 
-
 
     return (
         <Card>
@@ -53,19 +42,16 @@ export default function PlantsList({ region }) {
             </CardHeader>
             <CardContent>
 
-            <ImageModal img={selectedImage} setImage={setSelectedImage}></ImageModal>
-
                 <List ref={listRef} style={{ maxHeight: '600px', overflow: 'auto' }}>
                     {plants.results.data.map((plant: Species) =>
                         <ListItem key={plant.id}>
                             <ListItemAvatar>
-                                <IconButton title="Show bigger image" onClick={(e) => handleImageClick(e)}>
-                                    <Avatar style={{ height: '90px', width: '90px' }} src={plant.image_url}>
-                                        <img src={PlantIcon} alt='P'></img>
-                                    </Avatar>
-                                </IconButton>
+                                <PlantAvatar
+                                    img={{ imgSrc: plant.image_url, title: plant.common_name ?? plant.scientific_name }}
+                                    size={'80px'}
+                                ></PlantAvatar>
                             </ListItemAvatar>
-                            <ListItemText className={textClasses.primary} onClick={(e) => handleTextClick(e)} style={{ marginLeft: '5em' }}>
+                            <ListItemText className={textClasses.primary} onClick={() => handleTextClick(plant.id)} style={{ marginLeft: '5em' }}>
                                 {plant.common_name ?? plant.scientific_name}
                             </ListItemText>
                         </ListItem>

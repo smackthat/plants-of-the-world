@@ -2,8 +2,10 @@ import axios, { AxiosRequestConfig } from "axios";
 import { Species } from "../interfaces/trefle.interface";
 
 
+//#region Interfaces
 
-export interface ResultWithMeta<T> {
+/** An interface for list results */
+export interface IResultsWithMeta<T> {
     data: T[];
     links: {
         first?: string;
@@ -15,6 +17,21 @@ export interface ResultWithMeta<T> {
         total?: number
     };
 }
+
+/** An interface for a single plant */
+export interface IPlantWithMeta {
+    data: Species;
+    meta: {
+        images_count: number;
+        last_modified: Date;
+        sources_count: number;
+        synonyms_count: number;
+    }
+}
+
+//#endregion Interfaces
+
+
 export default class ApiService {
 
     //#region Constructor
@@ -26,7 +43,7 @@ export default class ApiService {
 
     //#region  Public methods
 
-    public async getPlantsForRegion(regionId: string, page: number = 1): Promise<ResultWithMeta<Species>> {
+    public async getPlantsForRegion(regionId: string, page: number = 1): Promise<IResultsWithMeta<Species>> {
 
         const plants = await this.get(`api/plants/forRegion/${regionId}`, {
             params: {
@@ -36,8 +53,8 @@ export default class ApiService {
         return plants.data;
     }
 
-    public async getPlant(plantId: number): Promise<Species> {
-        const plant = await this.get(`api/plants/${plantId}`)
+    public async getPlant(plantId: number): Promise<IPlantWithMeta> {
+        const plant = await this.get(`api/plants/${plantId}`);
         return plant.data;
     }
 
