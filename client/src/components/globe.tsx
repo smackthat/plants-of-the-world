@@ -107,7 +107,7 @@ export default function Globe({ size, geoJson }) {
                         key={i + d.properties.Level4_cod}
                         id={d.properties.Level4_cod}
                         d={d3geo.geoPath().projection(projection)(d) || undefined}
-                        className="region">
+                        className={context.regions && context.regions.has(d.properties.Level3_cod.toLowerCase()) ? "region selected" : "region"}>
                         <title>{d.properties.Level_4_Na}</title>
                     </path>
                 )}

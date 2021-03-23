@@ -29,14 +29,71 @@ export interface IPlantWithMeta {
     }
 }
 
+interface ICachedData {
+    data: IResultsWithMeta<any> | IPlantWithMeta;
+    expiration: Date;
+}
+
 //#endregion Interfaces
 
 
 export default class ApiService {
 
+    private apiCache: Map<string, ICachedData>;
+
     //#region Constructor
     constructor() {
         console.log('Lock n loaded');
+
+        // Setting up the cache
+        this.apiCache = new Map();
+
+        axios.interceptors.request.use((value: AxiosRequestConfig) => {
+
+            if (value.method === 'get') {
+                const key = this.parseQuery(value)
+
+                if (this.apiCache.has(key)) {
+
+                    const cached = this.apiCache.get(key);
+
+                    if (cached.expiration.getTime() < new Date().getTime()) {
+                        this.apiCache.delete(key);
+                    }
+                    else {
+                        value.data = cached.data;
+
+                        // Return from cache, don't run a real request
+                        value.adapter = () => {
+                            return Promise.resolve({
+                                data: cached.data,
+                                status: 200,
+                                statusText: 'OK',
+                                headers: value.headers,
+                                config: value
+                            })
+                        }
+                    }
+                }
+            }
+
+            // Not in cache/cache expired, run a request
+            return value;
+        });
+
+        axios.interceptors.response.use((value) => {
+
+            const key = this.parseQuery(value.config);
+
+            if (!this.apiCache.has(key)) {
+                this.apiCache.set(key, {
+                    data: value.data,
+                    expiration: new Date(Date.now() + 3 * 60000)    // Keep object in cache for 3 minutes (for now)
+                });
+            }
+
+            return value;
+        });
     }
 
     //#endregion Constructor
@@ -61,6 +118,18 @@ export default class ApiService {
     //#endregion Public methods
 
     //#region Private methods
+
+    /** Parses query url with parameters (if provided) as a string */
+    private parseQuery(config: AxiosRequestConfig): string {
+
+        if (!config.params) {
+            return config.url;
+        }
+
+        return config.url + '?' + Object.keys(config.params).map(key => {
+            return key + '=' + config.params[key];
+        }).join('&');
+    }
 
     /** Runs a get request */
     private async get(url: string, config?: AxiosRequestConfig) {

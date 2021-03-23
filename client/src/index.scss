@@ -16,10 +16,17 @@ body {
     fill: teal;
     stroke: #ddd;
     stroke-width: 0.5;
+
+    &.selected {
+      fill: yellowgreen;
+      transition: fill 3s;
+    }
+
+    &:hover {
+      stroke-width: 1.5;
+    }
   }
-  .region:hover {
-    stroke-width: 1.5;
-  }
+
 
   .water {
     fill: url(#waterGradient)
