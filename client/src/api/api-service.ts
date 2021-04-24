@@ -90,6 +90,14 @@ export default class ApiService {
                     data: value.data,
                     expiration: new Date(Date.now() + 3 * 60000)    // Keep object in cache for 3 minutes (for now)
                 });
+
+                console.log('Added to cache: ', this.apiCache);
+            }
+
+            if (this.apiCache.size > 80) {
+                Array.from(this.apiCache.keys())
+                    .slice(0, 60)
+                    .forEach(key => this.apiCache.delete(key))
             }
 
             return value;
@@ -113,6 +121,17 @@ export default class ApiService {
     public async getPlant(plantId: number): Promise<IPlantWithMeta> {
         const plant = await this.get(`api/plants/${plantId}`);
         return plant.data;
+    }
+
+    public async getPlantsSearch(query: string, page: number = 1): Promise<IResultsWithMeta<Species>> {
+
+        const plants = await this.get(`api/plants/search/${query}`, {
+            params: {
+                page
+            }
+        });
+
+        return plants.data;
     }
 
     //#endregion Public methods

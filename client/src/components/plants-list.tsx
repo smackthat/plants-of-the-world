@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, createStyles, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from "@material-ui/core";
+import { createStyles, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
-import { useContext, useRef} from "react";
+import { useContext, useRef } from "react";
 import { IMainContext, MainContext } from "../context/maincontext";
 import { Species } from "../interfaces/trefle.interface";
 import { PlantAvatar } from "./plant-avatar";
@@ -16,7 +16,7 @@ const textStyles = makeStyles(() =>
 );
 
 
-export default function PlantsList({ region }) {
+export default function PlantsList() {
 
     const textClasses = textStyles();
 
@@ -26,48 +26,47 @@ export default function PlantsList({ region }) {
 
     const pageSize: number = 20;
     const onPageChange = (page: number) => {
-        a.onPageChange(region.regionIdentifier, page)
+        a.onPageChange(a.region.regionIdentifier, page)
         console.log(listRef.current);
         listRef.current.scrollTop = 0;
     };
 
     const handleTextClick = (plantId: number) => {
         a.onPlantSelected(plantId);
+    };
+
+    if (!plants) {
+        return (
+            <div></div>
+        )
     }
 
     return (
-        <Card>
-            <CardHeader
-                title={"Plants of " + a.region.regionName}>
-            </CardHeader>
-            <CardContent>
+        <>
+            <List ref={listRef} style={{ maxHeight: '600px', overflow: 'auto' }}>
+                {plants.results.data.map((plant: Species) =>
+                    <ListItem key={plant.id}>
+                        <ListItemAvatar>
+                            <PlantAvatar
+                                img={{ imgSrc: plant.image_url, title: plant.common_name ?? plant.scientific_name }}
+                                size={'80px'}
+                            ></PlantAvatar>
+                        </ListItemAvatar>
+                        <ListItemText className={textClasses.primary} onClick={() => handleTextClick(plant.id)} style={{ marginLeft: '5em' }}>
+                            {plant.common_name ?? plant.scientific_name}
+                        </ListItemText>
+                    </ListItem>
+                )}
 
-                <List ref={listRef} style={{ maxHeight: '600px', overflow: 'auto' }}>
-                    {plants.results.data.map((plant: Species) =>
-                        <ListItem key={plant.id}>
-                            <ListItemAvatar>
-                                <PlantAvatar
-                                    img={{ imgSrc: plant.image_url, title: plant.common_name ?? plant.scientific_name }}
-                                    size={'80px'}
-                                ></PlantAvatar>
-                            </ListItemAvatar>
-                            <ListItemText className={textClasses.primary} onClick={() => handleTextClick(plant.id)} style={{ marginLeft: '5em' }}>
-                                {plant.common_name ?? plant.scientific_name}
-                            </ListItemText>
-                        </ListItem>
-                    )}
-
-                </List>
-                <Pagination
-                    siblingCount={2}
-                    page={plants.page}
-                    count={Math.ceil(plants.results.meta.total / pageSize)}
-                    onChange={(e, page) => onPageChange(page)}
-                    color="primary"
-                ></Pagination>
-
-            </CardContent>
-        </Card>
+            </List>
+            <Pagination
+                siblingCount={2}
+                page={plants.page}
+                count={Math.ceil(plants.results.meta.total / pageSize)}
+                onChange={(e, page) => onPageChange(page)}
+                color="primary"
+            ></Pagination>
+        </>
 
     );
 }

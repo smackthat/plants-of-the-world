@@ -9,6 +9,7 @@ import { Zone } from "../interfaces/trefle.interface";
 import IconButton from "@material-ui/core/IconButton";
 import { ArrowBack } from "@material-ui/icons";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import { Typography } from "@material-ui/core";
 
 const styles = makeStyles(() =>
     createStyles({
@@ -25,7 +26,7 @@ const styles = makeStyles(() =>
 
 enum PlantToggle {
     Native,
-    Extinct
+    Introduced
 }
 
 export default function Plant() {
@@ -40,15 +41,17 @@ export default function Plant() {
 
     const handlePlantToggle = (e, toggle: PlantToggle) => {
 
-        if (toggle === PlantToggle.Native) {
-            a.onRegionsChanged((a.plant.distributions.native as Zone[]));
+        switch (toggle) {
+            case PlantToggle.Native:
+                a.onRegionsChanged((a.plant.distributions.native as Zone[]));
+                break;
+            case PlantToggle.Introduced:
+                a.onRegionsChanged((a.plant.distributions.introduced as Zone[]));
+                break;
+            default:
+                a.onRegionsChanged(null);
         }
-        else if (toggle === PlantToggle.Extinct) {
 
-        }
-        else {
-            a.onRegionsChanged(null);
-        }
         setPlantToggle(toggle);
     }
 
@@ -70,13 +73,17 @@ export default function Plant() {
                     size={'200px'}
                 ></PlantAvatar>
 
+                <Typography variant="subtitle1">Family: {a.plant.family}</Typography>
+                <Typography variant="subtitle1">Genus: {a.plant.genus}</Typography>
+
                 <ToggleButtonGroup
+                    style={{marginTop: '2em'}}
                     value={plantToggle}
                     exclusive
                     onChange={handlePlantToggle}
                 >
-                    <ToggleButton value={PlantToggle.Native}>Show where I grow!</ToggleButton>
-                    {/* <ToggleButton value={PlantToggle.Extinct}>Show where I'm extinct...</ToggleButton> */}
+                    <ToggleButton value={PlantToggle.Native}>Show where native</ToggleButton>
+                    <ToggleButton value={PlantToggle.Introduced}>Show where introduced</ToggleButton>
                 </ToggleButtonGroup>
 
             </CardContent>

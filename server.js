@@ -12,9 +12,10 @@ app.get("/api/plants/forRegion/:regionId", async (req, res) => {
 
     const regionId = req.params.regionId;
     const page = req.query.page || 1;
-    const response = await fetch(`https://trefle.io/api/v1/distributions/${regionId}/plants?filter%5Bestablishment%5D=native&order[common_name]=asc&token=${process.env.TREFLE_API_KEY}&page=${page}`);
     
-    let json = await response.json();
+    const response = await fetch(`https://trefle.io/api/v1/plants?zone_id=${regionId}&order[common_name]=asc&token=${process.env.TREFLE_API_KEY}&page=${page}`);
+
+    const json = await response.json();
     res.status(200).json(json);
 });
 
@@ -24,9 +25,19 @@ app.get("/api/plants/:plantId", async (req, res) => {
     const plantId = req.params.plantId;
     const response = await fetch(`https://trefle.io/api/v1/species/${plantId}?token=${process.env.TREFLE_API_KEY}`);
 
-    let json = await response.json();
+    const json = await response.json();
     res.status(200).json(json);
 });
+
+/** Searchs for plants by query string */
+app.get("/api/plants/search/:query", async (req, res) => {
+
+    const query = req.params.query;
+    const response = await fetch(`https://trefle.io/api/v1/plants/search?q=${query}&token=${process.env.TREFLE_API_KEY}`);
+
+    const json = await response.json();
+    res.status(200).json(json);
+})
 
 //#endregion Plants
 
