@@ -49,7 +49,7 @@ export default function ImageModal({ img, setImage }) {
             closeAfterTransition
         >
             <Fade in={open}>
-                <img style={{ maxHeight: '80%', width: 'auto' }} title={img?.title} src={img?.imgSrc} alt=''></img>
+                <img style={{ maxHeight: '80%', width: 'auto' }} src={img} alt=''></img>
             </Fade>
 
         </Modal>

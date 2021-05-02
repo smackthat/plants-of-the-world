@@ -93,7 +93,7 @@ export default function MainContextProvider({ children }) {
         else {
             setState({plants: null})
         }
-    }, []);
+    }, [apiService]);
 
     const mainContext = useMemo(() => {
         return {

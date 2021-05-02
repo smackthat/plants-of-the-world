@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, CardHeader, IconButton, Typography } from "@material-ui/core";
-import { ArrowBack } from "@material-ui/icons";
-import React, { useContext, useState } from "react";
+import { ArrowBack, Search } from "@material-ui/icons";
+import { useContext, useState } from "react";
 import { IMainContext, MainContext } from "../context/maincontext";
 import Plant from "./plant";
 import PlantSearch from "./plant-search";
@@ -74,7 +74,14 @@ export default function Information() {
                 </Typography>
 
                 <Typography style={{ marginTop: '2em ' }}>
-                    Or <Button onClick={(e) => setUseSearch(true)} color="primary">use search</Button>
+                    <Button
+                        variant="contained"
+                        onClick={(e) => setUseSearch(true)}
+                        color="primary"
+                        startIcon={<Search />}
+                    >
+                        use search
+                     </Button>
                 </Typography>
 
 

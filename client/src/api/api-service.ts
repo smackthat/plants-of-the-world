@@ -28,7 +28,6 @@ export interface IPlantWithMeta {
         synonyms_count: number;
     }
 }
-
 interface ICachedData {
     data: IResultsWithMeta<any> | IPlantWithMeta;
     expiration: Date;
