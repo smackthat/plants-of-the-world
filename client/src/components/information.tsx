@@ -1,5 +1,6 @@
-import { Button, Card, CardContent, CardHeader, IconButton, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, CardHeader, IconButton, Snackbar, Typography } from '@material-ui/core';
 import { ArrowBack, Search } from '@material-ui/icons';
+import Alert from '@material-ui/lab/Alert';
 import { useContext, useState } from 'react';
 import { IMainContext, MainContext } from '../context/maincontext';
 import Plant from './plant';
@@ -20,14 +21,19 @@ export default function Information() {
         setUseSearch(false);
     };
 
-    if (plant !== null) {
-        return (
-            <Plant></Plant>
-        );
-    }
+    const handleClose = () => {
+        a.onErrorHiding();
+    };
 
-    if (useSearch && region === null) {
-        return (
+    let view;
+
+
+    if (plant !== null) {
+
+        view = <Plant></Plant>;
+    }
+    else if (useSearch && region === null) {
+        view =
             <Card>
                 <CardHeader
                     avatar={
@@ -41,12 +47,10 @@ export default function Information() {
                     <PlantSearch></PlantSearch>
                     <PlantsList></PlantsList>
                 </CardContent>
-            </Card>
-        );
+            </Card>;
     }
-
-    if (region !== null && plants !== null) {
-        return (
+    else if (region !== null && plants !== null) {
+        view = 
             <Card>
                 <CardHeader
                     avatar={
@@ -59,35 +63,51 @@ export default function Information() {
                 <CardContent>
                     <PlantsList></PlantsList>
                 </CardContent>
-            </Card>
-        );
+            </Card>;
+    }
+    else {
+        view =
+            <Card>
+                <CardHeader
+                    title="Welcome to the world of plants!"
+                ></CardHeader>
+                <CardContent>
+                    <Typography>
+                        Please choose a region from the map.
+                    </Typography>
+    
+                    <Typography style={{ marginTop: '2em ' }}>
+                        <Button
+                            variant="contained"
+                            onClick={() => setUseSearch(true)}
+                            color="primary"
+                            startIcon={<Search />}
+                        >
+                            use search
+                        </Button>
+                    </Typography>
+    
+    
+    
+                </CardContent>
+            </Card>;
     }
 
+
+        
     return (
-        <Card>
-            <CardHeader
-                title="Welcome to the world of plants!"
-            ></CardHeader>
-            <CardContent>
-                <Typography>
-                    Please choose a region from the map.
-                </Typography>
-
-                <Typography style={{ marginTop: '2em ' }}>
-                    <Button
-                        variant="contained"
-                        onClick={() => setUseSearch(true)}
-                        color="primary"
-                        startIcon={<Search />}
-                    >
-                        use search
-                    </Button>
-                </Typography>
-
-
-
-            </CardContent>
-        </Card>
+        <>
+            {a.error &&
+            <Snackbar
+                open={a.error}
+                autoHideDuration={6000}
+                onClose={handleClose}>
+                <Alert onClose={handleClose} variant="filled" severity="error">
+                    Something went wrong, please try again later.
+                </Alert>
+            </Snackbar>
+            }
+            {view}
+        </>
     );
-
 }

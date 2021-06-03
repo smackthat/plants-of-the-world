@@ -12,6 +12,8 @@ interface IMainContextState {
     regions: Map<string, Zone>;
     plants: IPlantsWithPage;
     plant: Species;
+    loading: boolean;
+    error: boolean;
 }
 export interface IRegion {
     regionName: string;
@@ -23,6 +25,9 @@ export interface IMainContext {
     regions: Map<string, Zone>;
     plants: IPlantsWithPage;
     plant: Species;
+    error: boolean;
+    loading: boolean;
+    onErrorHiding: () => void;
     onRegionChanged: (region: IRegion) => void;
     onRegionsChanged: (regions: Zone[]) => void;
     onPageChange: (regionIdentifier: string, page: number) => void;
@@ -40,7 +45,7 @@ export default function MainContextProvider({ children }: Props) {
 
     const [state, setState] = useReducer<Reducer<IMainContextState, Partial<IMainContextState>>>(
         (state, newState) => ({ ...state, ...newState }),
-        { region: null, regions: null, plants: null, plant: null }
+        { region: null, regions: null, plants: null, plant: null, loading: false, error: false }
     );
 
     console.log('REGION ', state.region);
@@ -51,19 +56,38 @@ export default function MainContextProvider({ children }: Props) {
         return new ApiService();
     }, []);
 
+    /** Run API requests through this to spawn loading spinner and to catch errors */
+    const runApiRequest = useCallback(async (apiCall: (...params) => Promise<any>, afterDone: (res: any) => void) => {
+        try {
+            setState({ loading: true });
+
+            const res = await apiCall();
+
+            afterDone(res);
+        } catch (error) {
+            setState({ error: true });
+        } finally {
+            setState({ loading: false });
+        }
+    }, []);
+
     const onRegionChanged = useCallback(async (newRegion: IRegion) => {
         setState({ region: newRegion, plant: null, plants: null, regions: null });
 
         if (newRegion) {
-            const res = await apiService.getPlantsForRegion(newRegion.regionIdentifier);
-            setState({ plants: { results: res, page: 1 } });
+            await runApiRequest(() => apiService.getPlantsForRegion(newRegion.regionIdentifier), (res) => {
+                setState({ plants: { results: res, page: 1 } });
+            });
         }
 
     }, [apiService]);
 
     const onPageChange = useCallback(async (regionId: string, page: number) => {
-        const res = await apiService.getPlantsForRegion(regionId, page);
-        setState({ plants: { results: res, page: page } });
+
+        await runApiRequest(() => apiService.getPlantsForRegion(regionId, page), (res) => {
+            setState({ plants: { results: res, page: page } });
+        });
+
     }, [apiService]);
 
     const onPlantSelected = useCallback(async (plantId: number) => {
@@ -72,8 +96,10 @@ export default function MainContextProvider({ children }: Props) {
             setState({ plant: null, regions: null });
         }
         else {
-            const res = await apiService.getPlant(plantId);
-            setState({ plant: res.data });
+            await runApiRequest(() => apiService.getPlant(plantId), (res) => {
+                setState({ plant: res });
+            });
+
         }
 
     }, [apiService]);
@@ -81,23 +107,30 @@ export default function MainContextProvider({ children }: Props) {
     const onRegionsChanged = useCallback((zones: Zone[]) => {
         if (zones && zones.length > 0) {
             const foo = new Map(zones.map(z => [z.slug, z]));
-            setState({regions: foo});
+            setState({ regions: foo });
         }
         else {
-            setState({regions: null});
+            setState({ regions: null });
         }
 
     }, []);
 
     const onPlantsSearch = useCallback(async (query: string) => {
         if (query && query.length > 0) {
-            const res = await apiService.getPlantsSearch(query);
-            setState({ plants: { results: res, page: 1 } });
+
+            await runApiRequest(() => apiService.getPlantsSearch(query), (res) => {
+                setState({ plants: { results: res, page: 1 } });
+            });
+
         }
         else {
-            setState({plants: null});
+            setState({ plants: null });
         }
-    }, [apiService]);
+    }, [apiService, runApiRequest]);
+
+    const onErrorHiding = useCallback(() => {
+        setState({ error: false });
+    }, []);
 
     const mainContext = useMemo(() => {
         return {
@@ -105,13 +138,17 @@ export default function MainContextProvider({ children }: Props) {
             regions: state.regions,
             plants: state.plants,
             plant: state.plant,
+            loading: state.loading,
+            error: state.error,
             onRegionChanged: onRegionChanged,
             onRegionsChanged: onRegionsChanged,
             onPageChange: onPageChange,
             onPlantSelected: onPlantSelected,
+            onErrorHiding: onErrorHiding,
             onPlantsSearch: onPlantsSearch
         };
-    }, [state.region, state.regions, state.plants, state.plant, onRegionChanged, onRegionsChanged, onPageChange, onPlantSelected, onPlantsSearch]);
+    }, [state.region, state.regions, state.plants, state.plant, state.loading, state.error, onRegionChanged, onRegionsChanged, onPageChange, onErrorHiding, onPlantSelected, onPlantsSearch]);
+
 
     return (
         <MainContext.Provider value={mainContext}>

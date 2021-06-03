@@ -7,12 +7,10 @@ import { Species } from '../interfaces/trefle.interface';
 /** An interface for list results */
 export interface IResultsWithMeta<T> {
     data: T[];
-    links: {
-        first?: string;
-        last?: string;
-        next?: string;
-        self?: string;
-    };
+    first?: string;
+    last?: string;
+    next?: string;
+    self?: string;
     meta: {
         total?: number
     };
@@ -35,7 +33,7 @@ interface ICachedData {
 
 //#endregion Interfaces
 
-
+const plantsUrl = 'api/plants';
 export default class ApiService {
 
     private apiCache: Map<string, ICachedData>;
@@ -87,13 +85,13 @@ export default class ApiService {
             if (!this.apiCache.has(key)) {
                 this.apiCache.set(key, {
                     data: value.data,
-                    expiration: new Date(Date.now() + 3 * 60000)    // Keep object in cache for 3 minutes (for now)
+                    expiration: new Date(Date.now() + 5 * 60000)    // Keep object in cache for 3 minutes (for now)
                 });
 
                 console.log('Added to cache: ', this.apiCache);
             }
 
-            if (this.apiCache.size > 80) {
+            if (this.apiCache.size > 100) {
                 Array.from(this.apiCache.keys())
                     .slice(0, 60)
                     .forEach(key => this.apiCache.delete(key));
@@ -109,7 +107,7 @@ export default class ApiService {
 
     public async getPlantsForRegion(regionId: string, page = 1): Promise<IResultsWithMeta<Species>> {
 
-        const plants = await this.get(`api/plants/forRegion/${regionId}`, {
+        const plants = await this.get(`${plantsUrl}/forRegion/${regionId}`, {
             params: {
                 page
             }
@@ -118,13 +116,13 @@ export default class ApiService {
     }
 
     public async getPlant(plantId: number): Promise<IPlantWithMeta> {
-        const plant = await this.get(`api/plants/${plantId}`);
+        const plant = await this.get(`${plantsUrl}/${plantId}`);
         return plant.data;
     }
 
     public async getPlantsSearch(query: string, page = 1): Promise<IResultsWithMeta<Species>> {
 
-        const plants = await this.get(`api/plants/search/${query}`, {
+        const plants = await this.get(`${plantsUrl}/search/${query}`, {
             params: {
                 page
             }
@@ -157,6 +155,8 @@ export default class ApiService {
             console.log('RESULTO: ', result);
             return result;
         } catch (error) {
+
+            console.log(error);
             throw new Error(error);
         }
     }
