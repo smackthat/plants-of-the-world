@@ -1,16 +1,16 @@
-import CardContent from "@material-ui/core/CardContent";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import { useContext, useState } from "react";
-import { IMainContext, MainContext } from "../context/maincontext";
-import { PlantAvatar } from "./plant-avatar";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { Zone } from "../interfaces/trefle.interface";
-import IconButton from "@material-ui/core/IconButton";
-import { ArrowBack } from "@material-ui/icons";
-import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
-import { Typography } from "@material-ui/core";
-import ImageList from "./image-list";
+import CardContent from '@material-ui/core/CardContent';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import { useContext, useState } from 'react';
+import { IMainContext, MainContext } from '../context/maincontext';
+import { PlantAvatar } from './plant-avatar';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { Zone } from '../interfaces/trefle.interface';
+import IconButton from '@material-ui/core/IconButton';
+import { ArrowBack } from '@material-ui/icons';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import { Typography } from '@material-ui/core';
+import ImageList from './image-list';
 
 const styles = makeStyles(() =>
     createStyles({
@@ -36,31 +36,31 @@ export default function Plant() {
 
     const [plantToggle, setPlantToggle] = useState(null);
 
-    const handleGoBack = (e) => {
+    const handleGoBack = () => {
         a.onPlantSelected(null);
     };
 
     const handlePlantToggle = (e, toggle: PlantToggle) => {
 
         switch (toggle) {
-            case PlantToggle.Native:
-                a.onRegionsChanged((a.plant.distributions.native as Zone[]));
-                break;
-            case PlantToggle.Introduced:
-                a.onRegionsChanged((a.plant.distributions.introduced as Zone[]));
-                break;
-            default:
-                a.onRegionsChanged(null);
+        case PlantToggle.Native:
+            a.onRegionsChanged((a.plant.distributions.native as Zone[]));
+            break;
+        case PlantToggle.Introduced:
+            a.onRegionsChanged((a.plant.distributions.introduced as Zone[]));
+            break;
+        default:
+            a.onRegionsChanged(null);
         }
 
         setPlantToggle(toggle);
-    }
+    };
 
     return (
         <Card className={styles().primary}>
             <CardHeader className={styles().title}
                 avatar={
-                    <IconButton onClick={(e) => handleGoBack(e)}>
+                    <IconButton onClick={() => handleGoBack()}>
                         <ArrowBack></ArrowBack>
                     </IconButton>
                 }
@@ -91,6 +91,6 @@ export default function Plant() {
 
             </CardContent>
         </Card>
-    )
+    );
 
 }

@@ -1,8 +1,14 @@
-import Avatar from "@material-ui/core/Avatar";
+import Avatar from '@material-ui/core/Avatar';
 import PlantIcon from '../assets/icons/leaves.svg';
-import { PlantImageContainer } from "./plant-image-container";
+import { IImage } from '../interfaces/image.interface';
+import { PlantImageContainer } from './plant-image-container';
 
-export function PlantAvatar({ img, size }) {
+interface Props {
+    img: IImage,
+    size: string
+}
+
+export function PlantAvatar({ img, size }: Props) {
 
     return (
         <PlantImageContainer
@@ -13,5 +19,5 @@ export function PlantAvatar({ img, size }) {
             }
             img={img}
         ></PlantImageContainer>
-    )
+    );
 }

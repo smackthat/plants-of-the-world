@@ -32,7 +32,11 @@ export interface IMainContext {
 
 export const MainContext: React.Context<IMainContext> = createContext(null);
 
-export default function MainContextProvider({ children }) {
+interface Props {
+    children: React.ReactFragment
+}
+
+export default function MainContextProvider({ children }: Props) {
 
     const [state, setState] = useReducer<Reducer<IMainContextState, Partial<IMainContextState>>>(
         (state, newState) => ({ ...state, ...newState }),
@@ -76,11 +80,11 @@ export default function MainContextProvider({ children }) {
 
     const onRegionsChanged = useCallback((zones: Zone[]) => {
         if (zones && zones.length > 0) {
-            let foo = new Map(zones.map(z => [z.slug, z]));
+            const foo = new Map(zones.map(z => [z.slug, z]));
             setState({regions: foo});
         }
         else {
-            setState({regions: null})
+            setState({regions: null});
         }
 
     }, []);
@@ -91,7 +95,7 @@ export default function MainContextProvider({ children }) {
             setState({ plants: { results: res, page: 1 } });
         }
         else {
-            setState({plants: null})
+            setState({plants: null});
         }
     }, [apiService]);
 
@@ -106,8 +110,8 @@ export default function MainContextProvider({ children }) {
             onPageChange: onPageChange,
             onPlantSelected: onPlantSelected,
             onPlantsSearch: onPlantsSearch
-        }
-    }, [state.region, state.regions, state.plants, state.plant, onRegionChanged, onRegionsChanged, onPageChange, onPlantSelected, onPlantsSearch])
+        };
+    }, [state.region, state.regions, state.plants, state.plant, onRegionChanged, onRegionsChanged, onPageChange, onPlantSelected, onPlantsSearch]);
 
     return (
         <MainContext.Provider value={mainContext}>

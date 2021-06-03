@@ -1,7 +1,7 @@
-import { createStyles, GridList, GridListTile, makeStyles, Theme } from "@material-ui/core";
-import { useContext, useState } from "react";
-import { IMainContext, MainContext } from "../context/maincontext";
-import ImageModal from "./image-modal";
+import { createStyles, GridList, GridListTile, makeStyles, Theme } from '@material-ui/core';
+import { useContext, useState } from 'react';
+import { IMainContext, MainContext } from '../context/maincontext';
+import ImageModal from './image-modal';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,8 +38,8 @@ export default function ImageList() {
     const [ selectedImage, setSelectedImage] = useState<string>(null);
 
     const onImgClick = (e) => {
-        setSelectedImage(e.target.src)
-    }
+        setSelectedImage(e.target.src);
+    };
 
     const plantImages = Object.keys(a.plant.images)
         .flatMap(imgCategory => a.plant.images[imgCategory])

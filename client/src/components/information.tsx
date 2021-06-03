@@ -1,10 +1,10 @@
-import { Button, Card, CardContent, CardHeader, IconButton, Typography } from "@material-ui/core";
-import { ArrowBack, Search } from "@material-ui/icons";
-import { useContext, useState } from "react";
-import { IMainContext, MainContext } from "../context/maincontext";
-import Plant from "./plant";
-import PlantSearch from "./plant-search";
-import PlantsList from "./plants-list";
+import { Button, Card, CardContent, CardHeader, IconButton, Typography } from '@material-ui/core';
+import { ArrowBack, Search } from '@material-ui/icons';
+import { useContext, useState } from 'react';
+import { IMainContext, MainContext } from '../context/maincontext';
+import Plant from './plant';
+import PlantSearch from './plant-search';
+import PlantsList from './plants-list';
 
 export default function Information() {
 
@@ -23,7 +23,7 @@ export default function Information() {
     if (plant !== null) {
         return (
             <Plant></Plant>
-        )
+        );
     }
 
     if (useSearch && region === null) {
@@ -31,7 +31,7 @@ export default function Information() {
             <Card>
                 <CardHeader
                     avatar={
-                        <IconButton onClick={(e) => handleGoBack()}>
+                        <IconButton onClick={() => handleGoBack()}>
                             <ArrowBack></ArrowBack>
                         </IconButton>
                     }
@@ -42,7 +42,7 @@ export default function Information() {
                     <PlantsList></PlantsList>
                 </CardContent>
             </Card>
-        )
+        );
     }
 
     if (region !== null && plants !== null) {
@@ -50,17 +50,17 @@ export default function Information() {
             <Card>
                 <CardHeader
                     avatar={
-                        <IconButton onClick={(e) => handleGoBack()}>
+                        <IconButton onClick={() => handleGoBack()}>
                             <ArrowBack></ArrowBack>
                         </IconButton>
                     }
-                    title={"Plants of " + a.region.regionName}>
+                    title={'Plants of ' + a.region.regionName}>
                 </CardHeader>
                 <CardContent>
                     <PlantsList></PlantsList>
                 </CardContent>
             </Card>
-        )
+        );
     }
 
     return (
@@ -76,18 +76,18 @@ export default function Information() {
                 <Typography style={{ marginTop: '2em ' }}>
                     <Button
                         variant="contained"
-                        onClick={(e) => setUseSearch(true)}
+                        onClick={() => setUseSearch(true)}
                         color="primary"
                         startIcon={<Search />}
                     >
                         use search
-                     </Button>
+                    </Button>
                 </Typography>
 
 
 
             </CardContent>
         </Card>
-    )
+    );
 
 }

@@ -1,7 +1,7 @@
-import TextField from "@material-ui/core/TextField";
-import { useContext } from "react";
-import { IMainContext, MainContext } from "../context/maincontext";
-import debounce from "lodash.debounce";
+import TextField from '@material-ui/core/TextField';
+import { useContext } from 'react';
+import { IMainContext, MainContext } from '../context/maincontext';
+import debounce from 'lodash.debounce';
 
 export default function PlantSearch() {
 

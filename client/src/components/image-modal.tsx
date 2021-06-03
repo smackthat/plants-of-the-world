@@ -1,8 +1,8 @@
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
-import Modal from "@material-ui/core/Modal";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { useEffect, useState } from "react";
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import Modal from '@material-ui/core/Modal';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import React, { useEffect, useState } from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -20,7 +20,12 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export default function ImageModal({ img, setImage }) {
+interface Props {
+    img: string,
+    setImage: React.Dispatch<React.SetStateAction<string>>
+}
+
+export default function ImageModal({ img, setImage }: Props) {
 
     const classes = useStyles();
     const [open, setOpen] = useState(false);
@@ -28,7 +33,7 @@ export default function ImageModal({ img, setImage }) {
     const handleClose = () => {
         setImage(null);
         setOpen(false);
-    }
+    };
 
     useEffect(() => {
         if (img) {

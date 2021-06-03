@@ -1,9 +1,9 @@
-import { createStyles, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
-import { useContext, useRef } from "react";
-import { IMainContext, MainContext } from "../context/maincontext";
-import { Species } from "../interfaces/trefle.interface";
-import { PlantAvatar } from "./plant-avatar";
+import { createStyles, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
+import { useContext, useRef } from 'react';
+import { IMainContext, MainContext } from '../context/maincontext';
+import { Species } from '../interfaces/trefle.interface';
+import { PlantAvatar } from './plant-avatar';
 
 const textStyles = makeStyles(() =>
     createStyles({
@@ -24,9 +24,9 @@ export default function PlantsList() {
     const listRef = useRef(null);
     const { plants } = a;
 
-    const pageSize: number = 20;
+    const pageSize = 20;
     const onPageChange = (page: number) => {
-        a.onPageChange(a.region.regionIdentifier, page)
+        a.onPageChange(a.region.regionIdentifier, page);
         console.log(listRef.current);
         listRef.current.scrollTop = 0;
     };
@@ -38,7 +38,7 @@ export default function PlantsList() {
     if (!plants) {
         return (
             <div></div>
-        )
+        );
     }
 
     return (

@@ -11,24 +11,24 @@ console.log(regions);
 regions.features = regions.features.filter(x => x.properties.Level4_cod !== 'KRA-OO' && x.properties.Level4_cod !== 'TUA-OO');
 
 ReactDOM.render(
-  <MainContextProvider>
-    <Grid container spacing={3}>
-      <Grid item xs={6}>
-        <Globe
-          size={800}
-          geoJson={regions}
-        ></Globe>
-      </Grid>
-      <Grid item xs={4}>
-        <Information></Information>
-      </Grid>
-      <Grid item xs={12}>
-        <div className="footer">
-          <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
-        </div>
-      </Grid>
-    </Grid>
-  </MainContextProvider>,
-  document.getElementById('root')
+    <MainContextProvider>
+        <Grid container spacing={3}>
+            <Grid item xs={6}>
+                <Globe
+                    size={800}
+                    geoJson={regions}
+                ></Globe>
+            </Grid>
+            <Grid item xs={4}>
+                <Information></Information>
+            </Grid>
+            <Grid item xs={12}>
+                <div className="footer">
+                    <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+                </div>
+            </Grid>
+        </Grid>
+    </MainContextProvider>,
+    document.getElementById('root')
 );
 

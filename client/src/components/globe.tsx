@@ -1,11 +1,11 @@
-import { Reducer, useCallback, useContext, useEffect, useMemo, useReducer, useRef } from "react";
+import { Reducer, useCallback, useContext, useEffect, useMemo, useReducer, useRef } from 'react';
 import * as d3geo from 'd3-geo';
 import * as d3transition from 'd3-transition';
 import { interpolate as d3interpolate } from 'd3-interpolate';
 import *  as d3drag from 'd3-drag';
 import * as d3zoom from 'd3-zoom';
 import { select as d3select } from 'd3-selection';
-import { IMainContext, MainContext } from "../context/maincontext";
+import { IMainContext, MainContext } from '../context/maincontext';
 
 interface IGlobeState {
     x: number;
@@ -14,7 +14,12 @@ interface IGlobeState {
     scale: number;
 }
 
-export default function Globe({ size, geoJson }) {
+interface Props {
+    size: number,
+    geoJson: any
+}
+
+export default function Globe({ size, geoJson }: Props) {
 
     const context: IMainContext = useContext(MainContext);
 
@@ -29,16 +34,16 @@ export default function Globe({ size, geoJson }) {
     const projection = d3geo.geoOrthographic()
         .scale(state.scale)
         .translate([size / 2, size / 2])
-        .rotate([state.x, state.y, state.z])
+        .rotate([state.x, state.y, state.z]);
 
     const drag = useMemo(() => {
         return d3drag.drag()
             .subject(() => {
-                let r = projection.rotate();
+                const r = projection.rotate();
                 return { x: r[0] / sens, y: -r[1] / sens };
             })
             .on('drag', (event) => {
-                let rotate = projection.rotate();
+                const rotate = projection.rotate();
                 setState({ x: event.x * sens, y: -event.y * sens, z: rotate[2] });
             });
     }, [projection, sens]);
@@ -49,7 +54,7 @@ export default function Globe({ size, geoJson }) {
         return d3zoom.zoom()
             .scaleExtent([300, 900])
             .on('zoom', (e) => {
-                setState({ scale: e.transform.k })
+                setState({ scale: e.transform.k });
             });
     }, []);
 
@@ -62,11 +67,11 @@ export default function Globe({ size, geoJson }) {
 
     const handleClick = useCallback((e) => {
 
-        let region = geoJson.features.filter(x => x.properties.Level4_cod === e.target.id)[0];
-        let centroid = d3geo.geoCentroid(region);
-        let bounds = d3geo.geoPath().projection(projection).bounds(region);
+        const region = geoJson.features.filter(x => x.properties.Level4_cod === e.target.id)[0];
+        const centroid = d3geo.geoCentroid(region);
+        const bounds = d3geo.geoPath().projection(projection).bounds(region);
 
-        let nextScale = projection.scale() * 1 / Math.max((bounds[1][0] - bounds[0][0]) / (size / 4), (bounds[1][1] - bounds[0][1]) / (size / 4));
+        const nextScale = projection.scale() * 1 / Math.max((bounds[1][0] - bounds[0][0]) / (size / 4), (bounds[1][1] - bounds[0][1]) / (size / 4));
 
         context.onRegionChanged({ regionIdentifier: region.properties.Level3_cod, regionName: region.properties.Level_4_Na });
 
@@ -74,10 +79,10 @@ export default function Globe({ size, geoJson }) {
         (function transition() {
             d3transition.transition()
                 .duration(1000)
-                .tween("rotate", () => {
+                .tween('rotate', () => {
 
-                    let distance = d3interpolate(projection.rotate(), [-centroid[0], -centroid[1]]);
-                    let z = d3interpolate(projection.scale(), nextScale)
+                    const distance = d3interpolate(projection.rotate(), [-centroid[0], -centroid[1]]);
+                    const z = d3interpolate(projection.scale(), nextScale);
 
                     return (t: number) => {
 
@@ -86,7 +91,7 @@ export default function Globe({ size, geoJson }) {
 
                         setState({ x: a[0], y: a[1], z: 0, scale: b });
                     };
-                })
+                });
         })();
     }, [context, geoJson.features, projection, size]);
 
@@ -107,7 +112,7 @@ export default function Globe({ size, geoJson }) {
                         key={i + d.properties.Level4_cod}
                         id={d.properties.Level4_cod}
                         d={d3geo.geoPath().projection(projection)(d) || undefined}
-                        className={context.regions && context.regions.has(d.properties.Level3_cod.toLowerCase()) ? "region selected" : "region"}>
+                        className={context.regions && context.regions.has(d.properties.Level3_cod.toLowerCase()) ? 'region selected' : 'region'}>
                         <title>{d.properties.Level_4_Na}</title>
                     </path>
                 )}

@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig } from "axios";
-import { Species } from "../interfaces/trefle.interface";
+import axios, { AxiosRequestConfig } from 'axios';
+import { Species } from '../interfaces/trefle.interface';
 
 
 //#region Interfaces
@@ -50,7 +50,7 @@ export default class ApiService {
         axios.interceptors.request.use((value: AxiosRequestConfig) => {
 
             if (value.method === 'get') {
-                const key = this.parseQuery(value)
+                const key = this.parseQuery(value);
 
                 if (this.apiCache.has(key)) {
 
@@ -70,8 +70,8 @@ export default class ApiService {
                                 statusText: 'OK',
                                 headers: value.headers,
                                 config: value
-                            })
-                        }
+                            });
+                        };
                     }
                 }
             }
@@ -96,7 +96,7 @@ export default class ApiService {
             if (this.apiCache.size > 80) {
                 Array.from(this.apiCache.keys())
                     .slice(0, 60)
-                    .forEach(key => this.apiCache.delete(key))
+                    .forEach(key => this.apiCache.delete(key));
             }
 
             return value;
@@ -107,7 +107,7 @@ export default class ApiService {
 
     //#region  Public methods
 
-    public async getPlantsForRegion(regionId: string, page: number = 1): Promise<IResultsWithMeta<Species>> {
+    public async getPlantsForRegion(regionId: string, page = 1): Promise<IResultsWithMeta<Species>> {
 
         const plants = await this.get(`api/plants/forRegion/${regionId}`, {
             params: {
@@ -122,7 +122,7 @@ export default class ApiService {
         return plant.data;
     }
 
-    public async getPlantsSearch(query: string, page: number = 1): Promise<IResultsWithMeta<Species>> {
+    public async getPlantsSearch(query: string, page = 1): Promise<IResultsWithMeta<Species>> {
 
         const plants = await this.get(`api/plants/search/${query}`, {
             params: {
