@@ -57,7 +57,10 @@ export default function MainContextProvider({ children }: Props) {
     }, []);
 
     /** Run API requests through this to spawn loading spinner and to catch errors */
-    const runApiRequest = useCallback(async (apiCall: (...params) => Promise<any>, afterDone: (res: any) => void) => {
+    const runApiRequest = useCallback(async (
+        apiCall: (...params) => Promise<any>,
+        afterDone: (res: any) => void,
+        onError?: () => void) => {
         try {
             setState({ loading: true });
 
@@ -66,6 +69,11 @@ export default function MainContextProvider({ children }: Props) {
             afterDone(res);
         } catch (error) {
             setState({ error: true });
+
+            if (onError) {
+                onError();
+            }
+        
         } finally {
             setState({ loading: false });
         }
@@ -75,9 +83,13 @@ export default function MainContextProvider({ children }: Props) {
         setState({ region: newRegion, plant: null, plants: null, regions: null });
 
         if (newRegion) {
-            await runApiRequest(() => apiService.getPlantsForRegion(newRegion.regionIdentifier), (res) => {
-                setState({ plants: { results: res, page: 1 } });
-            });
+            await runApiRequest(() => apiService.getPlantsForRegion(newRegion.regionIdentifier),
+                (res) => {
+                    setState({ plants: { results: res, page: 1 } });
+                },
+                () => {
+                    setState({ region: null}); 
+                });
         }
 
     }, [apiService]);

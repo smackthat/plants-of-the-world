@@ -1,6 +1,6 @@
-import { createStyles, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from '@material-ui/core';
+import { CircularProgress, createStyles, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
-import { useContext, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { IMainContext, MainContext } from '../context/maincontext';
 import { Species } from '../interfaces/trefle.interface';
 import { PlantAvatar } from './plant-avatar';
@@ -22,7 +22,7 @@ export default function PlantsList() {
 
     const a: IMainContext = useContext(MainContext);
     const listRef = useRef(null);
-    const { plants } = a;
+    const { plants, loading } = a;
 
     const pageSize = 20;
     const onPageChange = (page: number) => {
@@ -37,7 +37,9 @@ export default function PlantsList() {
 
     if (!plants) {
         return (
-            <div></div>
+            <>
+                {a.loading && <CircularProgress></CircularProgress>}
+            </>
         );
     }
 

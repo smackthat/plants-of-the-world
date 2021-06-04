@@ -50,7 +50,7 @@ export default function Information() {
             </Card>;
     }
     else if (region !== null && plants !== null) {
-        view = 
+        view =
             <Card>
                 <CardHeader
                     avatar={
@@ -75,7 +75,7 @@ export default function Information() {
                     <Typography>
                         Please choose a region from the map.
                     </Typography>
-    
+
                     <Typography style={{ marginTop: '2em ' }}>
                         <Button
                             variant="contained"
@@ -86,26 +86,26 @@ export default function Information() {
                             use search
                         </Button>
                     </Typography>
-    
-    
-    
+
+
+
                 </CardContent>
             </Card>;
     }
 
 
-        
+
     return (
         <>
             {a.error &&
-            <Snackbar
-                open={a.error}
-                autoHideDuration={6000}
-                onClose={handleClose}>
-                <Alert onClose={handleClose} variant="filled" severity="error">
-                    Something went wrong, please try again later.
-                </Alert>
-            </Snackbar>
+                <Snackbar
+                    open={a.error}
+                    autoHideDuration={6000}
+                    onClose={handleClose}>
+                    <Alert onClose={handleClose} variant="filled" severity="error">
+                        Something went wrong, please try again later.
+                    </Alert>
+                </Snackbar>
             }
             {view}
         </>

@@ -17,8 +17,7 @@ app.get("/api/plants/forRegion/:regionId", async (req, res) => {
 
     const response = await runRequest(`${apiUrl}/plants?zone_id=${regionId}&order[common_name]=asc&token=${process.env.API_KEY}&page=${page}`, res);
 
-    const json = await response.json();
-    res.status(200).json(json);
+    res.status(200).json(response);
 });
 
 /** Gets a single plant with id */
@@ -27,8 +26,7 @@ app.get("/api/plants/:plantId", async (req, res) => {
     const plantId = req.params.plantId;
     const response = await runRequest(`${apiUrl}/species/${plantId}?token=${process.env.API_KEY}`, res);
 
-    const json = await response.json();
-    res.status(200).json(json);
+    res.status(200).json(response);
 });
 
 /** Searchs for plants by query string */
@@ -38,8 +36,7 @@ app.get("/api/plants/search/:query", async (req, res) => {
 
     const response = await runRequest(`${apiUrl}/plants/search?q=${query}&token=${process.env.API_KEY}`, res);
 
-    const json = await response.json();
-    res.status(200).json(json);
+    res.status(200).json(response);
 })
 
 //#endregion Plants
@@ -56,7 +53,7 @@ async function runRequest(reqString, res) {
 
     try {
         const response = await fetch(reqString);
-        return response;
+        return await response.json();
     } catch (error) {
         res.status(500).send(error);
     }
