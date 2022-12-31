@@ -85,13 +85,13 @@ export default class ApiService {
             if (!this.apiCache.has(key)) {
                 this.apiCache.set(key, {
                     data: value.data,
-                    expiration: new Date(Date.now() + 5 * 60000)    // Keep object in cache for 3 minutes (for now)
+                    expiration: new Date(Date.now() + 8 * 60000)    // Keep object in cache for 8 minutes (for now)
                 });
 
                 console.log('Added to cache: ', this.apiCache);
             }
 
-            if (this.apiCache.size > 100) {
+            if (this.apiCache.size > 300) {
                 Array.from(this.apiCache.keys())
                     .slice(0, 60)
                     .forEach(key => this.apiCache.delete(key));
@@ -154,7 +154,7 @@ export default class ApiService {
 
             console.log('RESULTO: ', result);
             return result;
-        } catch (error) {
+        } catch (error: any) {
 
             console.log(error);
             throw new Error(error);

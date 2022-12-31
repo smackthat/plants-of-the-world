@@ -109,7 +109,9 @@ export default function MainContextProvider({ children }: Props) {
         }
         else {
             await runApiRequest(() => apiService.getPlant(plantId), (res) => {
-                setState({ plant: res });
+                if (res.data) {
+                    setState({ plant: res.data });
+                }
             });
 
         }
@@ -129,6 +131,8 @@ export default function MainContextProvider({ children }: Props) {
 
     const onPlantsSearch = useCallback(async (query: string) => {
         if (query && query.length > 0) {
+
+            setState({ plants: null });
 
             await runApiRequest(() => apiService.getPlantsSearch(query), (res) => {
                 setState({ plants: { results: res, page: 1 } });

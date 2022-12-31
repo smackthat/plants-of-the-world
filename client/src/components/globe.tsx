@@ -29,12 +29,14 @@ export default function Globe({ size, geoJson }: Props) {
     );
 
     const svgRef = useRef(null);
-    const sens = useMemo(() => 0.40, []);
+    const sens = useMemo(() => 0.50, []);
 
-    const projection = d3geo.geoOrthographic()
-        .scale(state.scale)
-        .translate([size / 2, size / 2])
-        .rotate([state.x, state.y, state.z]);
+    const projection = useMemo(() => {
+        return d3geo.geoOrthographic()
+            .scale(state.scale)
+            .translate([size / 2, size / 2])
+            .rotate([state.x, state.y, state.z]);
+    }, [state.scale, state.x, state.y, state.z, size]);
 
     const drag = useMemo(() => {
         return d3drag.drag()
@@ -52,7 +54,7 @@ export default function Globe({ size, geoJson }: Props) {
 
     const zoom = useMemo(() => {
         return d3zoom.zoom()
-            .scaleExtent([300, 900])
+            .scaleExtent([200, 900])
             .on('zoom', (e) => {
                 setState({ scale: e.transform.k });
             });

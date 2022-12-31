@@ -5,7 +5,7 @@ require('dotenv').config();
 const app = express();
 app.set("port", process.env.PORT || 3001);
 
-const apiUrl = 'https://api.floracodex.com/v1';
+const apiUrl = 'https://trefle.io/api/v1/';
 
 //#region Plants
 
@@ -15,7 +15,7 @@ app.get("/api/plants/forRegion/:regionId", async (req, res) => {
     const regionId = req.params.regionId;
     const page = req.query.page || 1;
 
-    const response = await runRequest(`${apiUrl}/plants?zone_id=${regionId}&order[common_name]=asc&token=${process.env.API_KEY}&page=${page}`, res);
+    const response = await runRequest(`${apiUrl}/plants?zone_id=${regionId}&order[common_name]=asc&token=${process.env.TREFLE_API_KEY}&page=${page}`, res);
 
     res.status(200).json(response);
 });
@@ -24,7 +24,7 @@ app.get("/api/plants/forRegion/:regionId", async (req, res) => {
 app.get("/api/plants/:plantId", async (req, res) => {
 
     const plantId = req.params.plantId;
-    const response = await runRequest(`${apiUrl}/species/${plantId}?token=${process.env.API_KEY}`, res);
+    const response = await runRequest(`${apiUrl}/species/${plantId}?token=${process.env.TREFLE_API_KEY}`, res);
 
     res.status(200).json(response);
 });
@@ -34,7 +34,7 @@ app.get("/api/plants/search/:query", async (req, res) => {
 
     const query = req.params.query;
 
-    const response = await runRequest(`${apiUrl}/plants/search?q=${query}&token=${process.env.API_KEY}`, res);
+    const response = await runRequest(`${apiUrl}/plants/search?q=${query}&token=${process.env.TREFLE_API_KEY}`, res);
 
     res.status(200).json(response);
 })

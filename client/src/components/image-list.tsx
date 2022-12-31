@@ -1,4 +1,5 @@
 import { createStyles, GridList, GridListTile, makeStyles, Theme } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import { useContext, useState } from 'react';
 import { IMainContext, MainContext } from '../context/maincontext';
 import ImageModal from './image-modal';
@@ -30,12 +31,25 @@ interface IPlantImage {
     copyright?: string | null
 }
 
+const ImageTile = ({ img, onImgClick }: { img: IPlantImage, onImgClick: (e: any) => void }) => {
+    const [loaded, setLoaded] = useState<boolean>(false);
+
+    const handleImageLoaded = () => setLoaded(true);
+
+    return (
+        <>
+            {!loaded && <Skeleton variant='rect' animation='wave' height={150} />}
+            <img onLoad={handleImageLoaded} style={!loaded ? { display: 'none' } : { display: 'block' }} src={img.image_url} alt={''} onClick={(e) => onImgClick(e)}></img>
+        </>
+    );
+};
+
 export default function ImageList() {
 
     const classes = useStyles();
     const a: IMainContext = useContext(MainContext);
 
-    const [ selectedImage, setSelectedImage] = useState<string>(null);
+    const [selectedImage, setSelectedImage] = useState<string>(null);
 
     const onImgClick = (e) => {
         setSelectedImage(e.target.src);
@@ -45,7 +59,7 @@ export default function ImageList() {
         .flatMap(imgCategory => a.plant.images[imgCategory])
         .map((img: IPlantImage) => (
             <GridListTile className={classes.gridListTile} key={img.id} cols={1}>
-                <img src={img.image_url} alt={''} onClick={(e) => onImgClick(e)}></img>
+                <ImageTile img={img} onImgClick={onImgClick} />
             </GridListTile>
         ));
 

@@ -1,6 +1,6 @@
-import { CircularProgress, createStyles, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from '@material-ui/core';
+import { Box, CircularProgress, createStyles, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
-import React, { useContext, useRef } from 'react';
+import { useContext, useRef } from 'react';
 import { IMainContext, MainContext } from '../context/maincontext';
 import { Species } from '../interfaces/trefle.interface';
 import { PlantAvatar } from './plant-avatar';
@@ -37,9 +37,9 @@ export default function PlantsList() {
 
     if (!plants) {
         return (
-            <>
-                {a.loading && <CircularProgress></CircularProgress>}
-            </>
+            <Box display='flex' justifyContent='center' padding="1em">
+                {loading && <CircularProgress></CircularProgress>}
+            </Box>
         );
     }
 
