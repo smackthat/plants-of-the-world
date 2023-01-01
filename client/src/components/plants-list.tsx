@@ -26,8 +26,7 @@ export default function PlantsList() {
 
     const pageSize = 20;
     const onPageChange = (page: number) => {
-        a.onPageChange(a.region.regionIdentifier, page);
-        console.log(listRef.current);
+        a.onPageChange(page);
         listRef.current.scrollTop = 0;
     };
 

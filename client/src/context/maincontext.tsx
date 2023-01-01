@@ -12,6 +12,7 @@ interface IMainContextState {
     regions: Map<string, Zone>;
     plants: IPlantsWithPage;
     plant: Species;
+    search: string;
     loading: boolean;
     error: boolean;
 }
@@ -30,7 +31,7 @@ export interface IMainContext {
     onErrorHiding: () => void;
     onRegionChanged: (region: IRegion) => void;
     onRegionsChanged: (regions: Zone[]) => void;
-    onPageChange: (regionIdentifier: string, page: number) => void;
+    onPageChange: (page: number) => void;
     onPlantSelected: (plantId: number) => void;
     onPlantsSearch: (query: string) => void;
 }
@@ -45,7 +46,7 @@ export default function MainContextProvider({ children }: Props) {
 
     const [state, setState] = useReducer<Reducer<IMainContextState, Partial<IMainContextState>>>(
         (state, newState) => ({ ...state, ...newState }),
-        { region: null, regions: null, plants: null, plant: null, loading: false, error: false }
+        { region: null, regions: null, plants: null, plant: null, search: null, loading: false, error: false }
     );
 
     console.log('REGION ', state.region);
@@ -80,7 +81,7 @@ export default function MainContextProvider({ children }: Props) {
     }, []);
 
     const onRegionChanged = useCallback(async (newRegion: IRegion) => {
-        setState({ region: newRegion, plant: null, plants: null, regions: null });
+        setState({ region: newRegion, plant: null, plants: null, regions: null, search: null });
 
         if (newRegion) {
             await runApiRequest(() => apiService.getPlantsForRegion(newRegion.regionIdentifier),
@@ -94,13 +95,24 @@ export default function MainContextProvider({ children }: Props) {
 
     }, [apiService]);
 
-    const onPageChange = useCallback(async (regionId: string, page: number) => {
+    const onPageChange = useCallback(async (page: number) => {
 
-        await runApiRequest(() => apiService.getPlantsForRegion(regionId, page), (res) => {
-            setState({ plants: { results: res, page: page } });
-        });
+        // use region plants list
+        if (state.region?.regionIdentifier) {
+            await runApiRequest(() => apiService.getPlantsForRegion(state.region.regionIdentifier, page), (res) => {
+                setState({ plants: { results: res, page: page } });
+            });
+        }
+        // use plants search
+        else if (state.search) {
+            await runApiRequest(() => apiService.getPlantsSearch(state.search, page), (res) => {
+                setState({ plants: { results: res, page: page } });
+            });
+        }
 
-    }, [apiService]);
+
+
+    }, [apiService, state.region, state.search]);
 
     const onPlantSelected = useCallback(async (plantId: number) => {
 
@@ -118,6 +130,7 @@ export default function MainContextProvider({ children }: Props) {
 
     }, [apiService]);
 
+    /** Showing selected regions for filters */
     const onRegionsChanged = useCallback((zones: Zone[]) => {
         if (zones && zones.length > 0) {
             const foo = new Map(zones.map(z => [z.slug, z]));
@@ -132,7 +145,7 @@ export default function MainContextProvider({ children }: Props) {
     const onPlantsSearch = useCallback(async (query: string) => {
         if (query && query.length > 0) {
 
-            setState({ plants: null });
+            setState({ plants: null, search: query });
 
             await runApiRequest(() => apiService.getPlantsSearch(query), (res) => {
                 setState({ plants: { results: res, page: 1 } });
@@ -140,7 +153,7 @@ export default function MainContextProvider({ children }: Props) {
 
         }
         else {
-            setState({ plants: null });
+            setState({ plants: null, search: null });
         }
     }, [apiService, runApiRequest]);
 
@@ -154,6 +167,7 @@ export default function MainContextProvider({ children }: Props) {
             regions: state.regions,
             plants: state.plants,
             plant: state.plant,
+            search: state.search,
             loading: state.loading,
             error: state.error,
             onRegionChanged: onRegionChanged,

@@ -33,8 +33,9 @@ app.get("/api/plants/:plantId", async (req, res) => {
 app.get("/api/plants/search/:query", async (req, res) => {
 
     const query = req.params.query;
+    const page = req.query.page || 1;
 
-    const response = await runRequest(`${apiUrl}/plants/search?q=${query}&token=${process.env.TREFLE_API_KEY}`, res);
+    const response = await runRequest(`${apiUrl}/plants/search?q=${query}&token=${process.env.TREFLE_API_KEY}&page=${page}`, res);
 
     res.status(200).json(response);
 })

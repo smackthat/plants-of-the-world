@@ -1,6 +1,7 @@
 import { createStyles, GridList, GridListTile, makeStyles, Theme } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { useContext, useState } from 'react';
+import styled from 'styled-components';
 import { IMainContext, MainContext } from '../context/maincontext';
 import ImageModal from './image-modal';
 
@@ -39,10 +40,16 @@ const ImageTile = ({ img, onImgClick }: { img: IPlantImage, onImgClick: (e: any)
     return (
         <>
             {!loaded && <Skeleton variant='rect' animation='wave' height={150} />}
-            <img onLoad={handleImageLoaded} style={!loaded ? { display: 'none' } : { display: 'block' }} src={img.image_url} alt={''} onClick={(e) => onImgClick(e)}></img>
+            <StyledImageTile onLoad={handleImageLoaded} style={!loaded ? { display: 'none' } : { display: 'block' }} src={img.image_url} alt={''} onClick={(e) => onImgClick(e)}></StyledImageTile>
         </>
     );
 };
+
+const StyledImageTile = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+`;
 
 export default function ImageList() {
 
@@ -73,5 +80,4 @@ export default function ImageList() {
         </div>
 
     );
-
 }
