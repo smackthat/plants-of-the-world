@@ -21,13 +21,7 @@ export interface IRegion {
     regionIdentifier: string;
 }
 
-export interface IMainContext {
-    region: IRegion;
-    regions: Map<string, Zone>;
-    plants: IPlantsWithPage;
-    plant: Species;
-    error: boolean;
-    loading: boolean;
+export interface IMainContext extends IMainContextState {
     onErrorHiding: () => void;
     onRegionChanged: (region: IRegion) => void;
     onRegionsChanged: (regions: Zone[]) => void;

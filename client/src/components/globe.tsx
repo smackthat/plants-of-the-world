@@ -54,7 +54,7 @@ export default function Globe({ size, geoJson }: Props) {
 
     const zoom = useMemo(() => {
         return d3zoom.zoom()
-            .scaleExtent([200, 900])
+            .scaleExtent([300, 1000])
             .on('zoom', (e) => {
                 setState({ scale: e.transform.k });
             });

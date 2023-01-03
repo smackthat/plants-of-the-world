@@ -1,6 +1,7 @@
 import { createStyles, GridList, GridListTile, makeStyles, Theme } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { useContext, useState } from 'react';
+import { LazyLoadComponent, trackWindowScroll } from 'react-lazy-load-image-component';
 import styled from 'styled-components';
 import { IMainContext, MainContext } from '../context/maincontext';
 import ImageModal from './image-modal';
@@ -51,7 +52,7 @@ const StyledImageTile = styled.img`
     object-fit: cover;
 `;
 
-export default function ImageList() {
+function ImageList() {
 
     const classes = useStyles();
     const a: IMainContext = useContext(MainContext);
@@ -66,7 +67,9 @@ export default function ImageList() {
         .flatMap(imgCategory => a.plant.images[imgCategory])
         .map((img: IPlantImage) => (
             <GridListTile className={classes.gridListTile} key={img.id} cols={1}>
-                <ImageTile img={img} onImgClick={onImgClick} />
+                <LazyLoadComponent>
+                    <ImageTile img={img} onImgClick={onImgClick} />
+                </LazyLoadComponent>
             </GridListTile>
         ));
 
@@ -81,3 +84,5 @@ export default function ImageList() {
 
     );
 }
+
+export default trackWindowScroll(ImageList);
