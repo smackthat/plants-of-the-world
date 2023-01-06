@@ -1,4 +1,4 @@
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 import React, { useState } from 'react';
 import { IImage } from '../interfaces/image.interface';
 import ImageModal from './image-modal';
@@ -6,7 +6,7 @@ import ImageModal from './image-modal';
 
 interface Props {
     img: IImage,
-    element: React.ReactFragment
+    element: React.ReactNode
 }
 
 /** A generic plant image container that opens the image in a popup when clicked */

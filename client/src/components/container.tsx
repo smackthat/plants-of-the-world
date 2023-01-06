@@ -1,4 +1,4 @@
-import { Container } from '@material-ui/core';
+import Container from '@mui/material/Container';
 import React, { useContext } from 'react';
 import { MainContext } from '../context/maincontext';
 

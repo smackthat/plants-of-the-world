@@ -1,4 +1,4 @@
-import Avatar from '@material-ui/core/Avatar';
+import Avatar from '@mui/material/Avatar';
 import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import PlantIcon from '../assets/icons/leaves.svg';
 import { IImage } from '../interfaces/image.interface';
@@ -15,7 +15,7 @@ export function PlantAvatar({ img, size }: Props) {
         <PlantImageContainer
             element={
                 <LazyLoadComponent>
-                    <Avatar style={{ height: size, width: size }} src={img?.imgSrc}>
+                    <Avatar sx={{ height: size, width: size }} src={img?.imgSrc}>
                         <img src={PlantIcon} title={img?.title} alt='P'></img>
                     </Avatar>
                 </LazyLoadComponent>

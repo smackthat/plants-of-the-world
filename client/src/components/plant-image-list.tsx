@@ -1,31 +1,19 @@
-import { createStyles, GridList, GridListTile, makeStyles, Theme } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import Skeleton from '@mui/material/Skeleton';
+import { styled } from '@mui/material/styles';
 import { useContext, useState } from 'react';
 import { LazyLoadComponent, trackWindowScroll } from 'react-lazy-load-image-component';
-import styled from 'styled-components';
 import { IMainContext, MainContext } from '../context/maincontext';
 import ImageModal from './image-modal';
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-around',
-            overflow: 'hidden',
-            backgroundColor: theme.palette.background.paper,
-        },
-        gridList: {
-            width: 540,
-            height: 400,
-        },
-        gridListTile: {
-            '&:hover': {
-                cursor: 'pointer'
-            }
-        }
-    }),
-);
+const StyledDiv = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    overflow: 'hidden',
+    backgroundColor: theme.palette.background.paper,
+}));
 
 interface IPlantImage {
     id?: number;
@@ -40,21 +28,20 @@ const ImageTile = ({ img, onImgClick }: { img: IPlantImage, onImgClick: (e: any)
 
     return (
         <>
-            {!loaded && <Skeleton variant='rect' animation='wave' height={150} />}
+            {!loaded && <Skeleton variant='rectangular' animation='wave' height={150} />}
             <StyledImageTile onLoad={handleImageLoaded} style={!loaded ? { display: 'none' } : { display: 'block' }} src={img.image_url} alt={''} onClick={(e) => onImgClick(e)}></StyledImageTile>
         </>
     );
 };
 
-const StyledImageTile = styled.img`
+const StyledImageTile = styled('img')`
     width: 100%;
     height: 100%;
     object-fit: cover;
 `;
 
-function ImageList() {
+function PlantImageList() {
 
-    const classes = useStyles();
     const a: IMainContext = useContext(MainContext);
 
     const [selectedImage, setSelectedImage] = useState<string>(null);
@@ -66,23 +53,23 @@ function ImageList() {
     const plantImages = Object.keys(a.plant.images)
         .flatMap(imgCategory => a.plant.images[imgCategory])
         .map((img: IPlantImage) => (
-            <GridListTile className={classes.gridListTile} key={img.id} cols={1}>
+            <ImageListItem sx={{ ':hover': { cursor: 'pointer' } }} key={img.id} cols={1}>
                 <LazyLoadComponent>
                     <ImageTile img={img} onImgClick={onImgClick} />
                 </LazyLoadComponent>
-            </GridListTile>
+            </ImageListItem>
         ));
 
     return (
 
-        <div className={classes.root}>
-            <GridList cellHeight={150} className={classes.gridList} cols={3}>
+        <StyledDiv>
+            <ImageList rowHeight={150} sx={{ width: 540, height: 400 }} cols={3}>
                 {plantImages}
-            </GridList>
+            </ImageList>
             <ImageModal img={selectedImage} setImage={setSelectedImage}></ImageModal>
-        </div>
+        </StyledDiv>
 
     );
 }
 
-export default trackWindowScroll(ImageList);
+export default trackWindowScroll(PlantImageList);

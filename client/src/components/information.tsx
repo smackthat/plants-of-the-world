@@ -1,6 +1,12 @@
-import { Button, Card, CardContent, CardHeader, IconButton, Snackbar, Typography } from '@material-ui/core';
-import { ArrowBack, Search } from '@material-ui/icons';
-import Alert from '@material-ui/lab/Alert';
+import { ArrowBack, Search } from '@mui/icons-material';
+import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
+import Snackbar from '@mui/material/Snackbar';
+import Typography from '@mui/material/Typography';
 import { useContext, useState } from 'react';
 import { IMainContext, MainContext } from '../context/maincontext';
 import Plant from './plant';
@@ -26,7 +32,6 @@ export default function Information() {
     };
 
     let view;
-
 
     if (plant !== null) {
 
@@ -101,6 +106,7 @@ export default function Information() {
                 <Snackbar
                     open={a.error}
                     autoHideDuration={6000}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center'}}
                     onClose={handleClose}>
                     <Alert onClose={handleClose} variant="filled" severity="error">
                         Something went wrong, please try again later.

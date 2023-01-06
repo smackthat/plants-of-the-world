@@ -61,7 +61,7 @@ export default class ApiService {
                         value.data = cached.data;
 
                         // Return from cache, don't run a real request
-                        value.adapter = () => {
+                        (value.adapter as any) = () => {
                             return Promise.resolve({
                                 data: cached.data,
                                 status: 200,

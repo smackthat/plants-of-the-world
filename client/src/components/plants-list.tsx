@@ -1,24 +1,17 @@
-import { Box, CircularProgress, createStyles, List, ListItem, ListItemAvatar, ListItemText, makeStyles } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import Pagination from '@mui/material/Pagination';
 import { useContext, useRef } from 'react';
 import { IMainContext, MainContext } from '../context/maincontext';
 import { Species } from '../interfaces/trefle.interface';
 import { PlantAvatar } from './plant-avatar';
 
-const textStyles = makeStyles(() =>
-    createStyles({
-        primary: {
-            '&:hover': {
-                cursor: 'pointer'
-            }
-        }
-    })
-);
-
 
 export default function PlantsList() {
-
-    const textClasses = textStyles();
 
     const a: IMainContext = useContext(MainContext);
     const listRef = useRef(null);
@@ -44,7 +37,7 @@ export default function PlantsList() {
 
     return (
         <>
-            <List ref={listRef} style={{ maxHeight: '600px', overflow: 'auto' }}>
+            <List ref={listRef} sx={{ maxHeight: '600px', overflow: 'auto' }}>
                 {plants.results.data.map((plant: Species) =>
                     <ListItem key={plant.id}>
                         <ListItemAvatar>
@@ -53,7 +46,7 @@ export default function PlantsList() {
                                 size={'80px'}
                             ></PlantAvatar>
                         </ListItemAvatar>
-                        <ListItemText className={textClasses.primary} onClick={() => handleTextClick(plant.id)} style={{ marginLeft: '5em' }}>
+                        <ListItemText onClick={() => handleTextClick(plant.id)} sx={{ ':hover': { cursor: 'pointer' }, marginLeft: '5em' }}>
                             {plant.common_name ?? plant.scientific_name}
                         </ListItemText>
                     </ListItem>

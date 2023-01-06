@@ -1,29 +1,23 @@
-import CardContent from '@material-ui/core/CardContent';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import { useContext, useState } from 'react';
 import { IMainContext, MainContext } from '../context/maincontext';
 import { PlantAvatar } from './plant-avatar';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { Zone } from '../interfaces/trefle.interface';
-import IconButton from '@material-ui/core/IconButton';
-import { ArrowBack } from '@material-ui/icons';
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
-import { Typography } from '@material-ui/core';
-import ImageList from './image-list';
+import PlantImageList from './plant-image-list';
+import Card from '@mui/material/Card';
+import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
+import { ArrowBack } from '@mui/icons-material';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 
-const styles = makeStyles(() =>
-    createStyles({
-        primary: {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-        },
-        title: {
-            textAlign: 'center'
-        }
-    })
-);
+
+const displayStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+};
 
 enum PlantToggle {
     Native,
@@ -57,30 +51,31 @@ export default function Plant() {
     };
 
     return (
-        <Card className={styles().primary}>
-            <CardHeader className={styles().title}
+        <Card>
+            <CardHeader
                 avatar={
                     <IconButton onClick={() => handleGoBack()}>
-                        <ArrowBack></ArrowBack>
+                        <ArrowBack />
                     </IconButton>
                 }
+                sx={{ ...displayStyle, textAlign: 'center' }}
                 title={a.plant.common_name ?? a.plant.scientific_name}
                 subheader={a.plant.scientific_name}
             >
             </CardHeader>
-            <CardContent className={styles().primary}>
+            <CardContent sx={{ ...displayStyle }}>
                 <PlantAvatar
                     img={{ imgSrc: a.plant.image_url, title: a.plant.common_name ?? a.plant.scientific_name }}
                     size={'200px'}
                 ></PlantAvatar>
 
                 <Typography variant="subtitle2">Family: {a.plant.family}</Typography>
-                <Typography style={{marginBottom: '2em'}} variant="subtitle2">Genus: {a.plant.genus}</Typography>
+                <Typography sx={{ marginBottom: '2em' }} variant="subtitle2">Genus: {a.plant.genus}</Typography>
 
-                <ImageList></ImageList>
+                <PlantImageList />
 
                 <ToggleButtonGroup
-                    style={{ marginTop: '2em' }}
+                    sx={{ marginTop: '2em' }}
                     value={plantToggle}
                     exclusive
                     onChange={handlePlantToggle}

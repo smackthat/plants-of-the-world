@@ -33,7 +33,7 @@ export interface IMainContext extends IMainContextState {
 export const MainContext: React.Context<IMainContext> = createContext(null);
 
 interface Props {
-    children: React.ReactFragment
+    children: React.ReactNode;
 }
 
 export default function MainContextProvider({ children }: Props) {
@@ -68,7 +68,7 @@ export default function MainContextProvider({ children }: Props) {
             if (onError) {
                 onError();
             }
-        
+
         } finally {
             setState({ loading: false });
         }
@@ -83,7 +83,7 @@ export default function MainContextProvider({ children }: Props) {
                     setState({ plants: { results: res, page: 1 } });
                 },
                 () => {
-                    setState({ region: null}); 
+                    setState({ region: null });
                 });
         }
 

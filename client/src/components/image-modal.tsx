@@ -1,24 +1,13 @@
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-import Modal from '@material-ui/core/Modal';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Fade from '@mui/material/Fade';
+import Modal from '@mui/material/Modal';
+import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        modal: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        paper: {
-            backgroundColor: theme.palette.background.paper,
-            border: '2px solid #000',
-            boxShadow: theme.shadows[5],
-            padding: theme.spacing(2, 4, 3),
-        },
-    }),
-);
+const StyledModal = styled(Modal)`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
 
 interface Props {
     img: string,
@@ -27,7 +16,6 @@ interface Props {
 
 export default function ImageModal({ img, setImage }: Props) {
 
-    const classes = useStyles();
     const [open, setOpen] = useState(false);
 
     const handleClose = () => {
@@ -43,21 +31,16 @@ export default function ImageModal({ img, setImage }: Props) {
 
     return (
 
-        <Modal
-            className={classes.modal}
+        <StyledModal
             open={open}
             onClose={handleClose}
-            BackdropComponent={Backdrop}
-            BackdropProps={{
-                timeout: 500
-            }}
             closeAfterTransition
         >
             <Fade in={open}>
                 <img style={{ maxHeight: '80%', width: 'auto' }} src={img} alt=''></img>
             </Fade>
 
-        </Modal>
+        </StyledModal>
 
     );
 }
