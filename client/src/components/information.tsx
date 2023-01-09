@@ -34,7 +34,6 @@ export default function Information() {
     let view;
 
     if (plant !== null) {
-
         view = <Plant></Plant>;
     }
     else if (useSearch && region === null) {
@@ -54,7 +53,7 @@ export default function Information() {
                 </CardContent>
             </Card>;
     }
-    else if (region !== null && plants !== null) {
+    else if (region !== null) {
         view =
             <Card>
                 <CardHeader
@@ -106,7 +105,7 @@ export default function Information() {
                 <Snackbar
                     open={a.error}
                     autoHideDuration={6000}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center'}}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                     onClose={handleClose}>
                     <Alert onClose={handleClose} variant="filled" severity="error">
                         Something went wrong, please try again later.

@@ -1,9 +1,10 @@
 import { Reducer, useCallback, useContext, useEffect, useMemo, useReducer, useRef } from 'react';
 import * as d3geo from 'd3-geo';
 import * as d3transition from 'd3-transition';
-import { interpolate as d3interpolate } from 'd3-interpolate';
+import * as d3interpolate from 'd3-interpolate';
 import *  as d3drag from 'd3-drag';
 import * as d3zoom from 'd3-zoom';
+import * as d3ease from 'd3-ease';
 import { select as d3select } from 'd3-selection';
 import { IMainContext, MainContext } from '../context/maincontext';
 
@@ -19,6 +20,9 @@ interface Props {
     geoJson: any
 }
 
+/** Drag event sensitivity factor. */
+const sens = 0.60;
+
 export default function Globe({ size, geoJson }: Props) {
 
     const context: IMainContext = useContext(MainContext);
@@ -29,7 +33,6 @@ export default function Globe({ size, geoJson }: Props) {
     );
 
     const svgRef = useRef(null);
-    const sens = useMemo(() => 0.50, []);
 
     const projection = useMemo(() => {
         return d3geo.geoOrthographic()
@@ -54,7 +57,7 @@ export default function Globe({ size, geoJson }: Props) {
 
     const zoom = useMemo(() => {
         return d3zoom.zoom()
-            .scaleExtent([300, 1000])
+            .scaleExtent([300, 1600])
             .on('zoom', (e) => {
                 setState({ scale: e.transform.k });
             });
@@ -75,25 +78,29 @@ export default function Globe({ size, geoJson }: Props) {
 
         const nextScale = projection.scale() * 1 / Math.max((bounds[1][0] - bounds[0][0]) / (size / 4), (bounds[1][1] - bounds[0][1]) / (size / 4));
 
-        context.onRegionChanged({ regionIdentifier: region.properties.Level3_cod, regionName: region.properties.Level_4_Na });
-
         // Smooth rotate and zoom
-        (function transition() {
-            d3transition.transition()
+        (async function transition() {
+            await d3transition.transition()
+                .ease(d3ease.easeCubicOut)
                 .duration(1000)
                 .tween('rotate', () => {
 
-                    const distance = d3interpolate(projection.rotate(), [-centroid[0], -centroid[1]]);
-                    const z = d3interpolate(projection.scale(), nextScale);
+                    const distance = d3interpolate.interpolate(projection.rotate(), [-centroid[0], -centroid[1]]);
+                    const z = d3interpolate.interpolate(projection.scale(), nextScale);
 
                     return (t: number) => {
 
                         const a = distance(t);
                         const b = z(t);
 
+                        console.log(a);
+
                         setState({ x: a[0], y: a[1], z: 0, scale: b });
                     };
-                });
+                })
+                .end();
+
+            context.onRegionChanged({ regionIdentifier: region.properties.Level3_cod, regionName: region.properties.Level_4_Na });
         })();
     }, [context, geoJson.features, projection, size]);
 

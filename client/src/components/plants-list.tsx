@@ -54,6 +54,7 @@ export default function PlantsList() {
 
             </List>
             <Pagination
+                sx={{paddingTop: '1em'}}
                 siblingCount={2}
                 page={plants.page}
                 count={Math.ceil(plants.results.meta.total / pageSize)}
