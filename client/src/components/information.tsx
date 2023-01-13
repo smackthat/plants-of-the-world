@@ -16,7 +16,7 @@ import PlantsList from './plants-list';
 export default function Information() {
 
     const a: IMainContext = useContext(MainContext);
-    const { region, plants, plant } = a;
+    const { region, plant } = a;
 
     const [useSearch, setUseSearch] = useState(false);
 

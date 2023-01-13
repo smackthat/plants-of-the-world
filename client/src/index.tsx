@@ -1,15 +1,10 @@
 import { createRoot } from 'react-dom/client';
 import './index.scss';
 import Globe from './components/globe';
-import regions from './assets/regions';
 import Information from './components/information';
 import MainContextProvider from './context/maincontext';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-console.log(regions);
-// BUG with the geoJson: have to take out Tuamotu and Krasnoyarks since their coordinates are faulty and cause them to leak all over the globe... 
-regions.features = regions.features.filter(x => x.properties.Level4_cod !== 'KRA-OO' && x.properties.Level4_cod !== 'TUA-OO');
 
 const theme = createTheme();
 
@@ -24,7 +19,6 @@ root.render(
                 <Grid item xs={6}>
                     <Globe
                         size={800}
-                        geoJson={regions}
                     ></Globe>
                 </Grid>
                 <Grid item xs={4}>

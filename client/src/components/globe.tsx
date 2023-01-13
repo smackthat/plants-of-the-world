@@ -5,6 +5,7 @@ import * as d3interpolate from 'd3-interpolate';
 import *  as d3drag from 'd3-drag';
 import * as d3zoom from 'd3-zoom';
 import * as d3ease from 'd3-ease';
+import geoJson2 from '../assets/regions2.json';
 import { select as d3select } from 'd3-selection';
 import { IMainContext, MainContext } from '../context/maincontext';
 
@@ -16,14 +17,13 @@ interface IGlobeState {
 }
 
 interface Props {
-    size: number,
-    geoJson: any
+    size: number;
 }
 
 /** Drag event sensitivity factor. */
 const sens = 0.60;
 
-export default function Globe({ size, geoJson }: Props) {
+export default function Globe({ size }: Props) {
 
     const context: IMainContext = useContext(MainContext);
 
@@ -34,12 +34,17 @@ export default function Globe({ size, geoJson }: Props) {
 
     const svgRef = useRef(null);
 
-    const projection = useMemo(() => {
-        return d3geo.geoOrthographic()
-            .scale(state.scale)
-            .translate([size / 2, size / 2])
-            .rotate([state.x, state.y, state.z]);
-    }, [state.scale, state.x, state.y, state.z, size]);
+    // const projection = useMemo(() => {
+    //     return d3geo.geoOrthographic()
+    //         .scale(state.scale)
+    //         .translate([size / 2, size / 2])
+    //         .rotate([state.x, state.y, state.z]);
+    // }, [state.scale, state.x, state.y, state.z, size]);
+
+    const projection = d3geo.geoOrthographic()
+        .scale(state.scale)
+        .translate([size / 2, size / 2])
+        .rotate([state.x, state.y, state.z]);
 
     const drag = useMemo(() => {
         return d3drag.drag()
@@ -51,7 +56,7 @@ export default function Globe({ size, geoJson }: Props) {
                 const rotate = projection.rotate();
                 setState({ x: event.x * sens, y: -event.y * sens, z: rotate[2] });
             });
-    }, [projection, sens]);
+    }, [projection]);
 
 
 
@@ -72,9 +77,9 @@ export default function Globe({ size, geoJson }: Props) {
 
     const handleClick = useCallback((e) => {
 
-        const region = geoJson.features.filter(x => x.properties.Level4_cod === e.target.id)[0];
-        const centroid = d3geo.geoCentroid(region);
-        const bounds = d3geo.geoPath().projection(projection).bounds(region);
+        const region = geoJson2.features.filter(x => x.properties.LEVEL3_COD === e.target.id)[0];
+        const centroid = d3geo.geoCentroid(region as any);
+        const bounds = d3geo.geoPath().projection(projection).bounds(region as any);
 
         const nextScale = projection.scale() * 1 / Math.max((bounds[1][0] - bounds[0][0]) / (size / 4), (bounds[1][1] - bounds[0][1]) / (size / 4));
 
@@ -100,9 +105,9 @@ export default function Globe({ size, geoJson }: Props) {
                 })
                 .end();
 
-            context.onRegionChanged({ regionIdentifier: region.properties.Level3_cod, regionName: region.properties.Level_4_Na });
+            context.onRegionChanged({ regionIdentifier: region.properties.LEVEL3_COD, regionName: region.properties.LEVEL3_NAM });
         })();
-    }, [context, geoJson.features, projection, size]);
+    }, [context, geoJson2.features, projection, size]);
 
     return (
         <svg ref={svgRef} width={size} height={size}>
@@ -115,14 +120,14 @@ export default function Globe({ size, geoJson }: Props) {
             <g className="regions">
                 <path className="water" d={d3geo.geoPath().projection(projection)({ type: 'Sphere' }) || undefined}>
                 </path>
-                {geoJson.features.map((d, i) =>
+                {geoJson2.features.map((d, i) =>
                     <path
                         onClick={(event) => handleClick(event)}
-                        key={i + d.properties.Level4_cod}
-                        id={d.properties.Level4_cod}
-                        d={d3geo.geoPath().projection(projection)(d) || undefined}
-                        className={context.regions && context.regions.has(d.properties.Level3_cod.toLowerCase()) ? 'region selected' : 'region'}>
-                        <title>{d.properties.Level_4_Na}</title>
+                        key={i + d.properties.LEVEL3_COD}
+                        id={d.properties.LEVEL3_COD}
+                        d={d3geo.geoPath().projection(projection)(d as any) || undefined}
+                        className={context.regions && context.regions.has(d.properties.LEVEL3_COD.toLowerCase()) ? 'region selected' : 'region'}>
+                        <title>{d.properties.LEVEL3_NAM}</title>
                     </path>
                 )}
             </g>
