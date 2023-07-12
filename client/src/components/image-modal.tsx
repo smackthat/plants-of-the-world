@@ -1,7 +1,7 @@
 import Fade from '@mui/material/Fade';
 import Modal from '@mui/material/Modal';
 import { styled } from '@mui/material/styles';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 const StyledModal = styled(Modal)`
     display: flex;
@@ -16,27 +16,18 @@ interface Props {
 
 export default function ImageModal({ img, setImage }: Props) {
 
-    const [open, setOpen] = useState(false);
-
     const handleClose = () => {
         setImage(null);
-        setOpen(false);
     };
-
-    useEffect(() => {
-        if (img) {
-            setOpen(true);
-        }
-    }, [img]);
 
     return (
 
         <StyledModal
-            open={open}
+            open={!!img}
             onClose={handleClose}
             closeAfterTransition
         >
-            <Fade in={open}>
+            <Fade in={!!img}>
                 <img style={{ maxHeight: '80%', width: 'auto' }} src={img} alt=''></img>
             </Fade>
 
