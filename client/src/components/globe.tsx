@@ -1,13 +1,18 @@
-import { Reducer, useCallback, useContext, useEffect, useMemo, useReducer, useRef } from 'react';
+import { Reducer, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import * as d3geo from 'd3-geo';
-import * as d3transition from 'd3-transition';
-import * as d3interpolate from 'd3-interpolate';
+import { transition as d3transition } from 'd3-transition';
+import { interpolate as d3interpolate } from 'd3-interpolate';
 import *  as d3drag from 'd3-drag';
 import * as d3zoom from 'd3-zoom';
 import * as d3ease from 'd3-ease';
+import { tile as d3tile } from 'd3-tile';
+import { buffer as d3buffer } from 'd3-fetch';
 import geoJson2 from '../assets/regions2.json';
 import { select as d3select } from 'd3-selection';
 import { IMainContext, MainContext } from '../context/maincontext';
+import Pbf from 'pbf';
+import { VectorTile } from '@mapbox/vector-tile';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface IGlobeState {
     x: number;
@@ -23,6 +28,19 @@ interface Props {
 /** Drag event sensitivity factor. */
 const sens = 0.60;
 
+function geojson([x, y, z], layer) {
+    if (!layer) return;
+    const features = [];
+
+    for (let i = 0; i < layer.length; ++i) {
+        const f = layer.feature(i).toGeoJSON(x, y, z);
+        features.push(f);
+    }
+
+    console.log('FEATURES?', features);
+    return { type: 'FeatureCollection', features };
+}
+
 export default function Globe({ size }: Props) {
 
     const context: IMainContext = useContext(MainContext);
@@ -31,6 +49,8 @@ export default function Globe({ size }: Props) {
         (state, newState) => ({ ...state, ...newState }),
         { x: 0, y: 0, z: 0, scale: 300 }
     );
+
+    const [tiles, setTiles] = useState(null);
 
     const svgRef = useRef(null);
 
@@ -58,6 +78,18 @@ export default function Globe({ size }: Props) {
             });
     }, [projection]);
 
+    const tile = useMemo(() => {
+        return d3tile()
+            .size([size, size])
+            .scale(state.scale)
+            .clampX(true)
+            .translate(projection([0, 0]));
+    }, [size, state.scale]);
+
+
+    console.log('SCALE? ', state.scale);
+    console.log('TILE? ', tile());
+
 
 
     const zoom = useMemo(() => {
@@ -67,6 +99,23 @@ export default function Globe({ size }: Props) {
                 setState({ scale: e.transform.k });
             });
     }, []);
+
+    console.log('TILESSSS: ', tiles);
+
+    useEffect(() => {
+        (async () => {
+            const t = await Promise.all(tile().map(async d => {
+                d.layers = new VectorTile(new Pbf(await d3buffer('https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/' + d[2] + '/' + d[0] + '/' + d[1] + '.mvt?access_token=' + process.env.REACT_APP_MAPBOX_ACCESS_TOKEN))).layers;
+                if (d) {
+                    return d;
+                }
+            }));
+
+            console.log('ASETETAAN TILES: ', t);
+            setTiles(t);
+        })();
+
+    }, [tile]);
 
 
     useEffect(() => {
@@ -85,13 +134,13 @@ export default function Globe({ size }: Props) {
 
         // Smooth rotate and zoom
         (async function transition() {
-            await d3transition.transition()
+            await d3transition()
                 .ease(d3ease.easeCubicOut)
                 .duration(1000)
                 .tween('rotate', () => {
 
-                    const distance = d3interpolate.interpolate(projection.rotate(), [-centroid[0], -centroid[1]]);
-                    const z = d3interpolate.interpolate(projection.scale(), nextScale);
+                    const distance = d3interpolate(projection.rotate(), [-centroid[0], -centroid[1]]);
+                    const z = d3interpolate(projection.scale(), nextScale);
 
                     return (t: number) => {
 
@@ -109,12 +158,18 @@ export default function Globe({ size }: Props) {
         })();
     }, [context, geoJson2.features, projection, size]);
 
+    if (!tiles) {
+        return (
+            <CircularProgress />
+        );
+    }
+
     return (
         <svg ref={svgRef} width={size} height={size}>
             <defs>
                 <linearGradient id="waterGradient">
-                    <stop offset="30%" stopColor="aqua" />
-                    <stop offset="70%" stopColor="lightblue" />
+                    <stop offset="30%" stopColor="#97DEE7" />
+                    <stop offset="70%" stopColor="#78C5DC" />
                 </linearGradient>
             </defs>
             <g className="regions">
@@ -131,7 +186,26 @@ export default function Globe({ size }: Props) {
                     </path>
                 )}
             </g>
-        </svg>
+            <g>
+                {(tiles as any).map((d, i) =>
+
+                    <>
+
+                        <path
+                            key={i + '_figaro'}
+                            d={d3geo.geoPath().projection(projection)(geojson(d, d.layers.landcover) as any)}
+                            className="pilsner"
+                        >
+
+                        </path>
+
+
+                    </>
+
+                )}
+
+            </g>
+        </svg >
     );
 
 }

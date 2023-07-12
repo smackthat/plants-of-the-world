@@ -1,43 +1,48 @@
 body {
-    font: 14px "Century Gothic", Futura, sans-serif;
-    margin: 20px;
-    background: linear-gradient(to bottom right, rgb(166, 231, 186), rgb(208, 243, 143));
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+  background: linear-gradient(to bottom right, rgb(166, 231, 186), rgb(208, 243, 143));
+}
+
+#root {
+  margin: 20px auto;
+}
+
+ol,
+ul {
+  padding-left: 30px;
+}
+
+.region {
+  fill: green;
+  stroke: #ddd;
+  stroke-width: 0.3;
+
+  &.selected {
+    fill: yellowgreen;
+    transition: fill 3s;
   }
 
-  #root {
-    margin: 20px auto;
+  &:hover {
+    stroke-width: 1.5;
   }
-  
-  ol, ul {
-    padding-left: 30px;
+}
+
+.pilsner {
+  fill: transparent;
+  stroke: blue;
+}
+
+
+.water {
+  fill: url(#waterGradient);
+}
+
+.footer {
+  padding: auto;
+
+  >div {
+    text-align: end;
+    padding-right: 5em;
   }
-
-  .region {
-    fill: teal;
-    stroke: #ddd;
-    stroke-width: 0.5;
-
-    &.selected {
-      fill: yellowgreen;
-      transition: fill 3s;
-    }
-
-    &:hover {
-      stroke-width: 1.5;
-    }
-  }
-
-
-  .water {
-    fill: url(#waterGradient)
-  }
-
-  .footer {
-    padding: auto;
-
-    > div {
-      text-align: end;
-      padding-right: 5em;
-    }
-  }
-  
+}
