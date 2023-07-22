@@ -8,15 +8,39 @@ body {
   margin: 20px auto;
 }
 
+.map-container {
+  height: 600px;
+}
+
+.sidebar {
+  background-color: rgba(35, 55, 75, 0.9);
+  color: #fff;
+  padding: 6px 12px;
+  font-family: monospace;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 12px;
+  border-radius: 4px;
+}
+
 ol,
 ul {
   padding-left: 30px;
 }
 
+a {
+  text-decoration: none;
+
+  & + a {
+    padding-left: 1em;
+  }
+}
+
 .region {
-  fill: green;
   stroke: #ddd;
-  stroke-width: 0.3;
+  stroke-width: 0.5;
 
   &.selected {
     fill: yellowgreen;
