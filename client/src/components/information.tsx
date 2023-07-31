@@ -12,6 +12,7 @@ import { IMainContext, MainContext } from '../context/maincontext';
 import Plant from './plant';
 import PlantSearch from './plant-search';
 import PlantsList from './plants-list';
+import PlantsFilters from './plants-filters';
 
 export default function Information() {
 
@@ -65,7 +66,8 @@ export default function Information() {
                     title={'Plants of ' + a.region.regionName}>
                 </CardHeader>
                 <CardContent>
-                    <PlantsList></PlantsList>
+                    <PlantsFilters />
+                    <PlantsList />
                 </CardContent>
             </Card>;
     }

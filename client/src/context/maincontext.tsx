@@ -19,6 +19,10 @@ interface IMainContextState {
 export interface IRegion {
     regionName: string;
     regionIdentifier: string;
+    filters?: {
+        nativityFilter?: 'native' | 'introduced';
+        edibilityFilter?: string;
+    }
 }
 
 export interface IMainContext extends IMainContextState {
@@ -78,7 +82,7 @@ export default function MainContextProvider({ children }: Props) {
         setState({ region: newRegion, plant: null, plants: null, regions: null, search: null });
 
         if (newRegion) {
-            await runApiRequest(() => apiService.getPlantsForRegion(newRegion.regionIdentifier),
+            await runApiRequest(() => apiService.getPlantsForRegion(newRegion.regionIdentifier, 1, newRegion.filters?.nativityFilter, newRegion.filters?.edibilityFilter),
                 (res) => {
                     setState({ plants: { results: res, page: 1 } });
                 },
@@ -93,7 +97,7 @@ export default function MainContextProvider({ children }: Props) {
 
         // use region plants list
         if (state.region?.regionIdentifier) {
-            await runApiRequest(() => apiService.getPlantsForRegion(state.region.regionIdentifier, page), (res) => {
+            await runApiRequest(() => apiService.getPlantsForRegion(state.region.regionIdentifier, page, state.region.filters?.nativityFilter, state.region.filters?.edibilityFilter), (res) => {
                 setState({ plants: { results: res, page: page } });
             });
         }
@@ -127,7 +131,7 @@ export default function MainContextProvider({ children }: Props) {
     /** Showing selected regions for filters */
     const onRegionsChanged = useCallback((zones: Zone[]) => {
         if (zones && zones.length > 0) {
-            const foo = new Map(zones.map(z => [z.slug, z]));
+            const foo = new Map(zones.map(z => [z.slug.toUpperCase(), z]));
             setState({ regions: foo });
         }
         else {

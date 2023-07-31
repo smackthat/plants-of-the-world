@@ -9,6 +9,7 @@ import { useContext, useMemo, useRef } from 'react';
 import { IMainContext, MainContext } from '../context/maincontext';
 import { Species } from '../interfaces/trefle.interface';
 import { PlantAvatar } from './plant-avatar';
+import { Typography } from '@mui/material';
 
 const pageSize = 20;
 
@@ -36,6 +37,12 @@ export default function PlantsList() {
             <Box display='flex' justifyContent='center' padding="1em">
                 {loading && <CircularProgress></CircularProgress>}
             </Box>
+        );
+    }
+
+    if (plants.results.data.length === 0) {
+        return (
+            <Typography sx={{padding: 1}}>No results found.</Typography>
         );
     }
 

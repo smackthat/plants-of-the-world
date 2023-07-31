@@ -9,13 +9,29 @@ const apiUrl = 'https://trefle.io/api/v1/';
 
 //#region Plants
 
-/** Gets all the native plants for a distribution zone */
+/** Gets plants for a distribution zone */
 app.get("/api/plants/forRegion/:regionId", async (req, res) => {
 
     const regionId = req.params.regionId;
     const page = req.query.page || 1;
+    const establishmentFilter = req.query.nativityFilter;
+    const edibilityFilter = req.query.edibilityFilter;
 
-    const response = await runRequest(`${apiUrl}/plants?zone_id=${regionId}&order[common_name]=asc&token=${process.env.TREFLE_API_KEY}&page=${page}`, res);
+    let queryString = `${apiUrl}/plants?zone_id=${regionId}&order[common_name]=asc&token=${process.env.TREFLE_API_KEY}&page=${page}`;
+
+    if (establishmentFilter) {
+        queryString += `&filter%5Bestablishment%5D=${establishmentFilter}`;
+    }
+    if (edibilityFilter) {
+        if (edibilityFilter == "true") {
+            queryString += `&filter%5Bedible%5D=true`;
+        }
+        else {
+            queryString += `&filter%5Bedible%5D=false`;
+        }
+    }
+
+    const response = await runRequest(queryString, res);
 
     res.status(200).json(response);
 });
