@@ -16,7 +16,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 const displayStyle = {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
 };
 
 enum PlantToggle {
@@ -58,12 +58,12 @@ export default function Plant() {
                         <ArrowBack />
                     </IconButton>
                 }
-                sx={{ ...displayStyle, textAlign: 'center' }}
+                sx={{ textAlign: 'center' }}
                 title={a.plant.common_name ?? a.plant.scientific_name}
                 subheader={a.plant.scientific_name}
             >
             </CardHeader>
-            <CardContent sx={{ ...displayStyle }}>
+            <CardContent sx={{ ...displayStyle, maxHeight: '70vh' }}>
                 <PlantAvatar
                     img={{ imgSrc: a.plant.image_url, title: a.plant.common_name ?? a.plant.scientific_name }}
                     size={'200px'}

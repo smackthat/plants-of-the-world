@@ -48,7 +48,7 @@ export default function PlantsList() {
 
     return (
         <>
-            <List ref={listRef} sx={{ maxHeight: '600px', overflow: 'auto' }}>
+            <List ref={listRef} sx={{ maxHeight: '60vh', overflow: 'auto' }}>
                 {plants.results.data.map((plant: Species) =>
                     <ListItem key={plant.id}>
                         <ListItemAvatar>

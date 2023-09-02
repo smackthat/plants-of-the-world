@@ -13,8 +13,13 @@ import Plant from './plant';
 import PlantSearch from './plant-search';
 import PlantsList from './plants-list';
 import PlantsFilters from './plants-filters';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
-export default function Information() {
+interface Props {
+    drawerOpen?: boolean;
+}
+
+export default function Information({ drawerOpen }: Props) {
 
     const a: IMainContext = useContext(MainContext);
     const { region, plant } = a;

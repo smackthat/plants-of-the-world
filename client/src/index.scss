@@ -1,28 +1,10 @@
 body {
-  font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
   background: linear-gradient(to bottom right, rgb(166, 231, 186), rgb(208, 243, 143));
 }
 
 #root {
   margin: 20px auto;
-}
-
-.map-container {
-  height: 600px;
-}
-
-.sidebar {
-  background-color: rgba(35, 55, 75, 0.9);
-  color: #fff;
-  padding: 6px 12px;
-  font-family: monospace;
-  z-index: 1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 12px;
-  border-radius: 4px;
 }
 
 ol,
@@ -38,30 +20,6 @@ a {
   }
 }
 
-.region {
-  stroke: #ddd;
-  stroke-width: 0.5;
-
-  &.selected {
-    fill: yellowgreen;
-    transition: fill 3s;
-  }
-
-  &:hover {
-    stroke-width: 1.5;
-  }
-}
-
-.pilsner {
-  fill: transparent;
-  stroke: blue;
-}
-
-
-.water {
-  fill: url(#waterGradient);
-}
-
 .footer {
   padding: auto;
 
@@ -69,4 +27,8 @@ a {
     text-align: end;
     padding-right: 5em;
   }
+}
+
+div[mapboxgl-children] {
+  display: none;
 }
