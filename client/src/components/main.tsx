@@ -5,8 +5,7 @@ import MapboxGlobe from './mapbox-globe';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Information from './information';
 import { useState } from 'react';
-import { Box, Button, useMediaQuery } from '@mui/material';
-import { BottomSheet } from 'react-spring-bottom-sheet';
+import { Button, useMediaQuery } from '@mui/material';
 
 interface Props {
     theme: Theme;
@@ -14,7 +13,7 @@ interface Props {
 
 export default function Main({ theme }: Props) {
 
-    const [open, setOpen] = useState<boolean>(true);
+    const [open, setOpen] = useState<boolean>(false);
 
     const isDrawerView = useMediaQuery('only screen and (max-width: 1280px)');
 
@@ -33,11 +32,19 @@ export default function Main({ theme }: Props) {
 
                     {isDrawerView ? (
                         <Grid item>
-                            <BottomSheet
-                                open={open}
-                                onDismiss={() => setOpen(false)} >
+                            <SwipeableDrawer
+                                anchor="bottom"
+                                variant="persistent"
+                                onOpen={() => toggleDrawer(true)}
+                                onClose={() => toggleDrawer(false)}
+                                swipeAreaWidth={80}
+                                disableSwipeToOpen={false}
+                                ModalProps={{
+                                    keepMounted: true,
+                                }}
+                                open={open} >
                                 <Information drawerOpen={open} />
-                            </BottomSheet>
+                            </SwipeableDrawer>
                         </Grid>
 
                     ) : (

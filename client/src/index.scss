@@ -32,3 +32,8 @@ a {
 div[mapboxgl-children] {
   display: none;
 }
+
+.MuiDrawer-root > .MuiPaper-root {
+  height: calc(50% - 80px);
+  overflow: 'visible';
+}
