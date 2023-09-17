@@ -5,7 +5,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Pagination from '@mui/material/Pagination';
-import { useContext, useMemo, useRef } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import { IMainContext, MainContext } from '../context/maincontext';
 import { Species } from '../interfaces/trefle.interface';
 import { PlantAvatar } from './plant-avatar';
@@ -21,12 +21,17 @@ export default function PlantsList() {
 
     const onPageChange = (page: number) => {
         a.onPageChange(page);
-        listRef.current.scrollTop = 0;
     };
 
     const handleTextClick = (plantId: number) => {
         a.onPlantSelected(plantId);
     };
+
+    useEffect(() => {
+        if (listRef?.current) {
+            listRef.current.scrollTop = 0;
+        }
+    }, [plants]);
 
     const totalCount = useMemo(() => {
         return Math.ceil(plants?.results?.meta?.total / pageSize);
@@ -42,7 +47,7 @@ export default function PlantsList() {
 
     if (plants.results.data.length === 0) {
         return (
-            <Typography sx={{padding: 1}}>No results found.</Typography>
+            <Typography sx={{ padding: 1 }}>No results found.</Typography>
         );
     }
 
@@ -65,7 +70,7 @@ export default function PlantsList() {
 
             </List>
             <Pagination
-                sx={{paddingTop: '1em'}}
+                sx={{ paddingTop: '1em' }}
                 siblingCount={2}
                 page={plants.page}
                 count={totalCount}

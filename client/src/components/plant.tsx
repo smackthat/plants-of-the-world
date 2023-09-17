@@ -63,14 +63,14 @@ export default function Plant() {
                 subheader={a.plant.scientific_name}
             >
             </CardHeader>
-            <CardContent sx={{ ...displayStyle, maxHeight: '70vh' }}>
+            <CardContent sx={{ ...displayStyle, maxHeight: '80vh' }}>
                 <PlantAvatar
                     img={{ imgSrc: a.plant.image_url, title: a.plant.common_name ?? a.plant.scientific_name }}
                     size={'200px'}
                 ></PlantAvatar>
 
                 <Typography variant="subtitle2">Family: {a.plant.family}</Typography>
-                <Typography sx={{ marginBottom: '2em' }} variant="subtitle2">Genus: {a.plant.genus}</Typography>
+                <Typography sx={{ marginBottom: '1em' }} variant="subtitle2">Genus: {a.plant.genus}</Typography>
 
                 <PlantImageList />
 

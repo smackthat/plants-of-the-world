@@ -3,6 +3,9 @@ import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import PlantIcon from '../assets/icons/leaves.svg';
 import { IImage } from '../interfaces/image.interface';
 import { PlantImageContainer } from './plant-image-container';
+import { useState } from 'react';
+import Skeleton from '@mui/material/Skeleton';
+import Box from '@mui/material/Box';
 
 interface Props {
     img: IImage,
@@ -10,17 +13,29 @@ interface Props {
 }
 
 export function PlantAvatar({ img, size }: Props) {
+    const [loaded, setLoaded] = useState<boolean>(false);
+
+    const handleImageLoaded = () => setLoaded(true);
 
     return (
-        <PlantImageContainer
-            element={
-                <LazyLoadComponent>
-                    <Avatar sx={{ height: size, width: size }} src={img?.imgSrc}>
-                        <img src={PlantIcon} title={img?.title} alt='P'></img>
-                    </Avatar>
-                </LazyLoadComponent>
+        <>
+            {!loaded &&
+                <Box paddingX={'8px'}>
+                    <Skeleton variant='circular' animation='wave' height={size} width={size} />
+                </Box>
             }
-            img={img}
-        ></PlantImageContainer>
+            <PlantImageContainer
+                element={
+                    <LazyLoadComponent>
+                        <Avatar sx={{ height: size, width: size, display: loaded ? 'block' : 'none' }} src={img?.imgSrc} imgProps={{ onLoad: handleImageLoaded }}>
+                            <img src={PlantIcon} title={img?.title} alt='P'></img>
+                        </Avatar>
+                    </LazyLoadComponent>
+                }
+                img={img}
+            ></PlantImageContainer>
+
+        </>
+
     );
 }
