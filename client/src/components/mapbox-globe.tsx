@@ -3,7 +3,6 @@ import geoJson2 from '../assets/regions2.json';
 import Map, { Source, Layer, FillLayer, LineLayer } from 'react-map-gl';
 import { IMainContext, MainContext } from '../context/maincontext';
 import bbox from '@turf/bbox';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 const REGIONS = 'regions';
 const REGIONS_SOURCE = 'regions-source';
@@ -54,7 +53,6 @@ export default function MapboxGlobe() {
 
     const mapRef = useRef(null);
     const context: IMainContext = useContext(MainContext);
-    const isDrawerView = useMediaQuery('only screen and (max-width: 1280px)');
 
     /** Set the selected region and zoom into it */
     const onClick = useCallback((e) => {
@@ -106,7 +104,7 @@ export default function MapboxGlobe() {
                     longitude: 0
                 }}
                 ref={mapRef}
-                style={{ width: isDrawerView ? '100vw' : 700, height: isDrawerView ? '100vh' : 700 }}
+                style={{ width: 700, height: 650 }}
                 interactiveLayerIds={[REGIONS_FILL]}
                 onClick={onClick}
                 mapStyle={'mapbox://styles/jomamist/clk8df6nl00n401qrbk9hgr0g'}>

@@ -4,6 +4,11 @@ import { createTheme } from '@mui/material/styles';
 import Main from './components/main';
 
 const theme = createTheme({
+    palette: {
+        primary: {
+            main: '#00A092',
+        }
+    },
     typography: {
         fontFamily: 'Arial',
     }

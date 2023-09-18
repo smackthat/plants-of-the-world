@@ -1,5 +1,6 @@
 body {
   margin: 20px;
+  overflow: hidden;
   background: linear-gradient(to bottom right, rgb(166, 231, 186), rgb(208, 243, 143));
 }
 
@@ -14,16 +15,12 @@ ul {
 
 a {
   text-decoration: none;
-
-  & + a {
-    padding-left: 1em;
-  }
 }
 
 .footer {
   padding: auto;
 
-  >div {
+  &:only-child{
     text-align: end;
     padding-right: 5em;
   }
@@ -34,6 +31,6 @@ div[mapboxgl-children] {
 }
 
 .MuiDrawer-root > .MuiPaper-root {
-  height: calc(50% - 80px);
-  overflow: 'visible';
+  height: calc(60% - 80px);
+  overflow-y: visible;
 }

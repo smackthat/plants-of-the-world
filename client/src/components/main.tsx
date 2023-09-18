@@ -5,7 +5,7 @@ import MapboxGlobe from './mapbox-globe';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Information from './information';
 import { useState } from 'react';
-import { Button, useMediaQuery } from '@mui/material';
+import { Button, Typography, useMediaQuery } from '@mui/material';
 
 interface Props {
     theme: Theme;
@@ -43,18 +43,18 @@ export default function Main({ theme }: Props) {
                                     keepMounted: true,
                                 }}
                                 open={open} >
-                                <Information drawerOpen={open} />
+                                <Information drawerView={true} />
                             </SwipeableDrawer>
                         </Grid>
 
                     ) : (
                         <Grid item width={'40vw'}>
-                            <Information drawerOpen={false} />
+                            <Information drawerView={false} />
                         </Grid>
                     )}
                     <Grid item xs={12}>
                         <div className="footer">
-                            <div>Plant icon made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+                            <Typography variant="subtitle2">Plant icon made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></Typography>
                         </div>
                     </Grid>
                 </Grid>

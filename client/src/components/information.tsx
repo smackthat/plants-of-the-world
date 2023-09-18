@@ -13,13 +13,13 @@ import Plant from './plant';
 import PlantSearch from './plant-search';
 import PlantsList from './plants-list';
 import PlantsFilters from './plants-filters';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import Box from '@mui/material/Box';
 
 interface Props {
-    drawerOpen?: boolean;
+    drawerView?: boolean; // for smaller screens
 }
 
-export default function Information({ drawerOpen }: Props) {
+export default function Information({ drawerView }: Props) {
 
     const a: IMainContext = useContext(MainContext);
     const { region, plant } = a;
@@ -119,7 +119,25 @@ export default function Information({ drawerOpen }: Props) {
                     </Alert>
                 </Snackbar>
             }
-            {view}
+            {drawerView ? (
+                <Box sx={{
+                    position: 'absolute',
+                    top: -200,
+                    borderTopLeftRadius: 0,
+                    borderTopRightRadius: 0,
+                    visibility: 'visible',
+                    right: 0,
+                    left: 0,
+                }}>
+                    {view}
+                </Box>
+            ) : (
+                <>
+                    {view}
+                </>
+            )}
+
+
         </>
     );
 }
