@@ -14,14 +14,13 @@ import PlantSearch from './plant-search';
 import PlantsList from './plants-list';
 import PlantsFilters from './plants-filters';
 import Box from '@mui/material/Box';
+import { DrawerViewContext } from './main';
+import ToggleableCardTitle from './toggleable-card-title';
 
-interface Props {
-    drawerView?: boolean; // for smaller screens
-}
-
-export default function Information({ drawerView }: Props) {
+export default function Information() {
 
     const a: IMainContext = useContext(MainContext);
+    const { drawerView, toggleDrawer } = useContext(DrawerViewContext);
     const { region, plant } = a;
 
     const [useSearch, setUseSearch] = useState(false);
@@ -29,6 +28,7 @@ export default function Information({ drawerView }: Props) {
     console.log('REGION? ', region);
 
     const handleGoBack = () => {
+        toggleDrawer(false);
         a.onRegionChanged(null);
         setUseSearch(false);
     };
@@ -44,14 +44,14 @@ export default function Information({ drawerView }: Props) {
     }
     else if (useSearch && region === null) {
         view =
-            <Card>
+            <Card elevation={drawerView ? 0 : 2}>
                 <CardHeader
                     avatar={
                         <IconButton onClick={() => handleGoBack()}>
                             <ArrowBack></ArrowBack>
                         </IconButton>
                     }
-                    title="Search for plants">
+                    title={<ToggleableCardTitle title="Search for plants" />}>
                 </CardHeader>
                 <CardContent>
                     <PlantSearch></PlantSearch>
@@ -61,14 +61,14 @@ export default function Information({ drawerView }: Props) {
     }
     else if (region !== null) {
         view =
-            <Card>
+            <Card elevation={drawerView ? 0 : 2}>
                 <CardHeader
                     avatar={
                         <IconButton onClick={() => handleGoBack()}>
                             <ArrowBack></ArrowBack>
                         </IconButton>
                     }
-                    title={'Plants of ' + a.region.regionName}>
+                    title={<ToggleableCardTitle title={'Plants of ' + a.region.regionName} />}>
                 </CardHeader>
                 <CardContent>
                     <PlantsFilters />
@@ -78,7 +78,7 @@ export default function Information({ drawerView }: Props) {
     }
     else {
         view =
-            <Card>
+            <Card elevation={drawerView ? 0 : 2}>
                 <CardHeader
                     title="Welcome to the world of plants!"
                 ></CardHeader>
@@ -112,7 +112,7 @@ export default function Information({ drawerView }: Props) {
                 <Snackbar
                     open={a.error}
                     autoHideDuration={6000}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                    anchorOrigin={{ vertical: drawerView ? 'top' : 'bottom', horizontal: 'center' }}
                     onClose={handleClose}>
                     <Alert onClose={handleClose} variant="filled" severity="error">
                         Something went wrong, please try again later.

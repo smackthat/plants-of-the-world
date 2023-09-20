@@ -11,7 +11,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    overflow: 'hidden',
+    overflow: 'auto',
     backgroundColor: theme.palette.background.paper,
 }));
 
@@ -63,7 +63,7 @@ function PlantImageList() {
     return (
 
         <StyledDiv>
-            <ImageList rowHeight={150} sx={{ width: 540, height: '12em' }} cols={3}>
+            <ImageList rowHeight={150} cols={3}>
                 {plantImages}
             </ImageList>
             <ImageModal img={selectedImage} setImage={setSelectedImage}></ImageModal>

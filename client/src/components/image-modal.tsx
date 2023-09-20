@@ -28,7 +28,7 @@ export default function ImageModal({ img, setImage }: Props) {
             closeAfterTransition
         >
             <Fade in={!!img}>
-                <img style={{ maxHeight: '80%', width: 'auto' }} src={img} alt=''></img>
+                <img style={{ maxHeight: '80%', maxWidth: '90%' }} src={img} alt='plant-image'></img>
             </Fade>
 
         </StyledModal>

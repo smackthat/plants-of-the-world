@@ -4,12 +4,20 @@ import Grid from '@mui/material/Grid';
 import MapboxGlobe from './mapbox-globe';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Information from './information';
-import { useState } from 'react';
-import { Button, Typography, useMediaQuery } from '@mui/material';
+import { Context, createContext, useState } from 'react';
+import { Typography, useMediaQuery } from '@mui/material';
 
 interface Props {
     theme: Theme;
 }
+
+interface IDrawerViewContext {
+    drawerView: boolean;
+    drawerOpen: boolean;
+    toggleDrawer?: (newOpen: boolean) => void;
+}
+
+export const DrawerViewContext: Context<IDrawerViewContext> = createContext(null);
 
 export default function Main({ theme }: Props) {
 
@@ -24,41 +32,47 @@ export default function Main({ theme }: Props) {
     return (
         <ThemeProvider theme={theme}>
             <MainContextProvider>
-                <Grid container flexDirection={isDrawerView ? 'column' : 'row'} alignItems={isDrawerView ? 'center' : 'flex-start'} justifyContent="flex-start" spacing={3}>
-                    <Button onClick={() => toggleDrawer(!open)}>Toggle</Button>
-                    <Grid item>
-                        <MapboxGlobe />
-                    </Grid>
+                <DrawerViewContext.Provider value={{drawerView: isDrawerView, drawerOpen: open, toggleDrawer: toggleDrawer }}>
+                    <Grid container flexDirection={isDrawerView ? 'column' : 'row'} alignItems={isDrawerView ? 'center' : 'flex-start'} justifyContent="flex-start" spacing={3}>
+                        {isDrawerView ? (
+                            <MapboxGlobe />
+                        ) : (
+                            <Grid item>
+                                <MapboxGlobe />
+                            </Grid>
+                        )}
 
-                    {isDrawerView ? (
-                        <Grid item>
-                            <SwipeableDrawer
-                                anchor="bottom"
-                                variant="persistent"
-                                onOpen={() => toggleDrawer(true)}
-                                onClose={() => toggleDrawer(false)}
-                                swipeAreaWidth={80}
-                                disableSwipeToOpen={false}
-                                ModalProps={{
-                                    keepMounted: true,
-                                }}
-                                open={open} >
-                                <Information drawerView={true} />
-                            </SwipeableDrawer>
-                        </Grid>
 
-                    ) : (
-                        <Grid item width={'40vw'}>
-                            <Information drawerView={false} />
+                        {isDrawerView ? (
+                            <Grid item>
+                                <SwipeableDrawer
+                                    anchor="bottom"
+                                    variant="persistent"
+                                    onOpen={() => toggleDrawer(true)}
+                                    onClose={() => toggleDrawer(false)}
+                                    swipeAreaWidth={80}
+                                    disableSwipeToOpen={false}
+                                    ModalProps={{
+                                        keepMounted: true,
+                                    }}
+                                    open={open} >
+                                    <Information />
+                                </SwipeableDrawer>
+                            </Grid>
+
+                        ) : (
+                            <Grid item width={'40vw'}>
+                                <Information />
+                            </Grid>
+                        )}
+                        <Grid item xs={12}>
+                            <div className="footer">
+                                <Typography variant="subtitle2">Plant icon made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></Typography>
+                            </div>
                         </Grid>
-                    )}
-                    <Grid item xs={12}>
-                        <div className="footer">
-                            <Typography variant="subtitle2">Plant icon made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></Typography>
-                        </div>
                     </Grid>
-                </Grid>
+                </DrawerViewContext.Provider>
             </MainContextProvider>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 }

@@ -17,6 +17,17 @@ export function PlantAvatar({ img, size }: Props) {
 
     const handleImageLoaded = () => setLoaded(true);
 
+    if (!img.imgSrc) {
+        return (
+            <Box padding='8px'>
+                <Avatar sx={{ height: size, width: size }}>
+                    <img src={PlantIcon} title={img?.title} alt='P'></img>
+                </Avatar>
+            </Box>
+
+        );
+    }
+
     return (
         <>
             {!loaded &&

@@ -1,7 +1,7 @@
 body {
   margin: 20px;
   overflow: hidden;
-  background: linear-gradient(to bottom right, rgb(166, 231, 186), rgb(208, 243, 143));
+  background: linear-gradient(to bottom right, rgb(183, 228, 197), rgb(208, 243, 143));
 }
 
 #root {
@@ -27,6 +27,10 @@ a {
 }
 
 div[mapboxgl-children] {
+  display: none;
+}
+
+button.mapboxgl-ctrl-attrib-button {
   display: none;
 }
 

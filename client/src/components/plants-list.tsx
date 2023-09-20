@@ -10,12 +10,14 @@ import { IMainContext, MainContext } from '../context/maincontext';
 import { Species } from '../interfaces/trefle.interface';
 import { PlantAvatar } from './plant-avatar';
 import { Typography } from '@mui/material';
+import { DrawerViewContext } from './main';
 
 const pageSize = 20;
 
 export default function PlantsList() {
 
     const a: IMainContext = useContext(MainContext);
+    const  { drawerView } = useContext(DrawerViewContext);
     const listRef = useRef(null);
     const { plants, loading } = a;
 
@@ -53,9 +55,9 @@ export default function PlantsList() {
 
     return (
         <>
-            <List ref={listRef} sx={{ maxHeight: '60vh', overflow: 'auto' }}>
-                {plants.results.data.map((plant: Species) =>
-                    <ListItem key={plant.id}>
+            <List ref={listRef} sx={{ maxHeight: drawerView ? '50vh' : '70vh', overflow: 'auto' }}>
+                {plants.results.data.map((plant: Species, index) =>
+                    <ListItem key={plant.id + `_${index}`}>
                         <ListItemAvatar>
                             <PlantAvatar
                                 img={{ imgSrc: plant.image_url, title: plant.common_name ?? plant.scientific_name }}

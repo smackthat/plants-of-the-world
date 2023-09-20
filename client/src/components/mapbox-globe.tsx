@@ -1,8 +1,9 @@
-import { useContext, useCallback, useMemo, useRef } from 'react';
+import { useContext, useCallback, useMemo, useRef, useState } from 'react';
 import geoJson2 from '../assets/regions2.json';
 import Map, { Source, Layer, FillLayer, LineLayer } from 'react-map-gl';
 import { IMainContext, MainContext } from '../context/maincontext';
 import bbox from '@turf/bbox';
+import { DrawerViewContext } from './main';
 
 const REGIONS = 'regions';
 const REGIONS_SOURCE = 'regions-source';
@@ -39,7 +40,7 @@ const selectedRegionFillLayer: FillLayer = {
     }
 };
 
-const nativeRegionsFillLayer: FillLayer = {
+const nativeOrIntroducedRegionsFillLayer: FillLayer = {
     id: NATIVE_REGIONS_FILL,
     source: REGIONS_SOURCE,
     type: 'fill',
@@ -53,6 +54,9 @@ export default function MapboxGlobe() {
 
     const mapRef = useRef(null);
     const context: IMainContext = useContext(MainContext);
+    const { drawerView } = useContext(DrawerViewContext);
+
+    const [cursor, setCursor] = useState<string>('auto');
 
     /** Set the selected region and zoom into it */
     const onClick = useCallback((e) => {
@@ -85,12 +89,22 @@ export default function MapboxGlobe() {
         return ['in', 'LEVEL3_COD', ''];
     }, [context.region]);
 
-    const nativeRegionsFilter: boolean | ['in', string, ...any] = useMemo(() => {
+    const nativeOrIntroducedRegionsFilter: boolean | ['in', string, ...any] = useMemo(() => {
         if (context.regions && context.regions.size > 0) {
             return ['in', 'LEVEL3_COD', ...Array.from(context.regions.keys())];
         }
         return false;
     }, [context.regions]);
+
+    const globeStyle: React.CSSProperties = useMemo(() => {
+        if (drawerView) {
+            return { width: '100vw', height: 'calc(100vh - 200px)'}; // substract the closed drawer height to center it better
+        }
+        return { width: '50vw', height: '90vh'};
+    }, [drawerView]);
+
+    const onMouseEnter = useCallback(() => setCursor('pointer'), []);
+    const onMouseLeave = useCallback(() => setCursor('auto'), []);
 
     return (
         <div>
@@ -104,14 +118,17 @@ export default function MapboxGlobe() {
                     longitude: 0
                 }}
                 ref={mapRef}
-                style={{ width: 700, height: 650 }}
+                style={globeStyle}
+                cursor={cursor}
                 interactiveLayerIds={[REGIONS_FILL]}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
                 onClick={onClick}
                 mapStyle={'mapbox://styles/jomamist/clk8df6nl00n401qrbk9hgr0g'}>
                 <Source id={REGIONS_SOURCE} type="geojson" data={geoJson2}>
                     <Layer {...regionsLayer} />
                     <Layer {...selectedRegionFillLayer} filter={selectedRegionFilter} />
-                    <Layer {...nativeRegionsFillLayer} filter={nativeRegionsFilter} />
+                    <Layer {...nativeOrIntroducedRegionsFillLayer} filter={nativeOrIntroducedRegionsFilter} />
                     <Layer {...regionFill} />
                 </Source>
             </Map>

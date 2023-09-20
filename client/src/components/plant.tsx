@@ -11,6 +11,8 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+import ToggleableCardTitle from './toggleable-card-title';
+import { DrawerViewContext } from './main';
 
 
 const displayStyle = {
@@ -27,6 +29,7 @@ enum PlantToggle {
 export default function Plant() {
 
     const a: IMainContext = useContext(MainContext);
+    const { drawerView } = useContext(DrawerViewContext);
 
     const [plantToggle, setPlantToggle] = useState(null);
 
@@ -51,19 +54,18 @@ export default function Plant() {
     };
 
     return (
-        <Card>
+        <Card elevation={drawerView ? 0 : 2}>
             <CardHeader
                 avatar={
                     <IconButton onClick={() => handleGoBack()}>
                         <ArrowBack />
                     </IconButton>
                 }
-                sx={{ textAlign: 'center' }}
-                title={a.plant.common_name ?? a.plant.scientific_name}
+                title={<ToggleableCardTitle title={a.plant.common_name ?? a.plant.scientific_name} />}
                 subheader={a.plant.scientific_name}
             >
             </CardHeader>
-            <CardContent sx={{ ...displayStyle, maxHeight: '80vh' }}>
+            <CardContent sx={{ ...displayStyle, maxHeight: drawerView ? '60vh' : '80vh' }}>
                 <PlantAvatar
                     img={{ imgSrc: a.plant.image_url, title: a.plant.common_name ?? a.plant.scientific_name }}
                     size={'200px'}
