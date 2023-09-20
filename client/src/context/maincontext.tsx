@@ -47,10 +47,6 @@ export default function MainContextProvider({ children }: Props) {
         { region: null, regions: null, plants: null, plant: null, search: null, loading: false, error: false }
     );
 
-    console.log('REGION ', state.region);
-    console.log('PLANTS ', state.plants);
-    console.log('A PLANT: ', state.plant);
-
     const apiService = useMemo(() => {
         return new ApiService();
     }, []);

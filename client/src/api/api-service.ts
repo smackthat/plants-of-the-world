@@ -40,7 +40,6 @@ export default class ApiService {
 
     //#region Constructor
     constructor() {
-        console.log('Lock n loaded');
 
         // Setting up the cache
         this.apiCache = new Map();
@@ -88,7 +87,6 @@ export default class ApiService {
                     expiration: new Date(Date.now() + 8 * 60000)    // Keep object in cache for 8 minutes (for now)
                 });
 
-                console.log('Added to cache: ', this.apiCache);
             }
 
             if (this.apiCache.size > 300) {
@@ -154,7 +152,6 @@ export default class ApiService {
         try {
             const result = await axios.get(url, config);
 
-            console.log('RESULTO: ', result);
             return result;
         } catch (error: any) {
 

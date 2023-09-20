@@ -25,8 +25,6 @@ export default function Information() {
 
     const [useSearch, setUseSearch] = useState(false);
 
-    console.log('REGION? ', region);
-
     const handleGoBack = () => {
         toggleDrawer(false);
         a.onRegionChanged(null);
