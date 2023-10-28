@@ -1,7 +1,8 @@
 body {
   margin: 20px;
   overflow: hidden;
-  background: linear-gradient(to bottom right, rgb(183, 228, 197), rgb(208, 243, 143));
+  background: linear-gradient(to bottom right, rgb(188, 224, 199), rgb(208, 243, 143));
+  font-family: 'Roboto';
 }
 
 #root {
@@ -32,6 +33,14 @@ div[mapboxgl-children] {
 
 button.mapboxgl-ctrl-attrib-button {
   display: none;
+}
+
+div.mapboxgl-ctrl-attrib-inner {
+  font-size: 14px;
+
+  a + a {
+    padding-left: 0.5em;
+  }
 }
 
 .MuiDrawer-root > .MuiPaper-root {

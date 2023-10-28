@@ -1,7 +1,6 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { IMainContext, MainContext } from '../context/maincontext';
 import { PlantAvatar } from './plant-avatar';
-import { Zone } from '../interfaces/trefle.interface';
 import PlantImageList from './plant-image-list';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -9,10 +8,10 @@ import IconButton from '@mui/material/IconButton';
 import { ArrowBack } from '@mui/icons-material';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
 import ToggleableCardTitle from './toggleable-card-title';
 import { DrawerViewContext } from './main';
+import { PlantEstablishmentButtonGroup } from './plant-establishment-button-group';
+import { Box } from '@mui/material';
 
 
 const displayStyle = {
@@ -21,36 +20,13 @@ const displayStyle = {
     alignItems: 'center',
 };
 
-enum PlantToggle {
-    Native,
-    Introduced
-}
-
 export default function Plant() {
 
     const a: IMainContext = useContext(MainContext);
     const { drawerView } = useContext(DrawerViewContext);
 
-    const [plantToggle, setPlantToggle] = useState(null);
-
     const handleGoBack = () => {
         a.onPlantSelected(null);
-    };
-
-    const handlePlantToggle = (e, toggle: PlantToggle) => {
-
-        switch (toggle) {
-        case PlantToggle.Native:
-            a.onRegionsChanged((a.plant.distributions.native as Zone[]));
-            break;
-        case PlantToggle.Introduced:
-            a.onRegionsChanged((a.plant.distributions.introduced as Zone[]));
-            break;
-        default:
-            a.onRegionsChanged(null);
-        }
-
-        setPlantToggle(toggle);
     };
 
     return (
@@ -65,7 +41,7 @@ export default function Plant() {
                 subheader={a.plant.scientific_name}
             >
             </CardHeader>
-            <CardContent sx={{ ...displayStyle, maxHeight: drawerView ? '60vh' : '80vh' }}>
+            <CardContent sx={{ ...displayStyle, maxHeight: drawerView ? '60vh' : '80vh', overflow: drawerView ? 'auto' : 'none' }}>
                 <PlantAvatar
                     img={{ imgSrc: a.plant.image_url, title: a.plant.common_name ?? a.plant.scientific_name }}
                     size={'200px'}
@@ -76,15 +52,9 @@ export default function Plant() {
 
                 <PlantImageList />
 
-                <ToggleButtonGroup
-                    sx={{ marginTop: '2em' }}
-                    value={plantToggle}
-                    exclusive
-                    onChange={handlePlantToggle}
-                >
-                    <ToggleButton value={PlantToggle.Native}>Show where native</ToggleButton>
-                    <ToggleButton value={PlantToggle.Introduced}>Show where introduced</ToggleButton>
-                </ToggleButtonGroup>
+                <Box marginTop='2em'>
+                    <PlantEstablishmentButtonGroup />
+                </Box>
 
             </CardContent>
         </Card>

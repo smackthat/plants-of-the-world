@@ -6,12 +6,12 @@ import { useContext, useState } from 'react';
 import { LazyLoadComponent, trackWindowScroll } from 'react-lazy-load-image-component';
 import { IMainContext, MainContext } from '../context/maincontext';
 import ImageModal from './image-modal';
+import { DrawerViewContext } from './main';
 
 const StyledDiv = styled('div')(({ theme }) => ({
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
-    overflow: 'auto',
     backgroundColor: theme.palette.background.paper,
 }));
 
@@ -43,6 +43,7 @@ const StyledImageTile = styled('img')`
 function PlantImageList() {
 
     const a: IMainContext = useContext(MainContext);
+    const { drawerView } = useContext(DrawerViewContext);
 
     const [selectedImage, setSelectedImage] = useState<string>(null);
 
@@ -62,7 +63,7 @@ function PlantImageList() {
 
     return (
 
-        <StyledDiv>
+        <StyledDiv sx={{overflow: drawerView ? 'none' : 'auto'}}>
             <ImageList rowHeight={150} cols={3}>
                 {plantImages}
             </ImageList>

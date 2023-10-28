@@ -9,7 +9,7 @@ interface IPlantsWithPage {
 
 interface IMainContextState {
     region: IRegion;
-    regions: Map<string, Zone>;
+    regions: Zone[];
     plants: IPlantsWithPage;
     plant: Species;
     search: string;
@@ -44,7 +44,7 @@ export default function MainContextProvider({ children }: Props) {
 
     const [state, setState] = useReducer<Reducer<IMainContextState, Partial<IMainContextState>>>(
         (state, newState) => ({ ...state, ...newState }),
-        { region: null, regions: null, plants: null, plant: null, search: null, loading: false, error: false }
+        { region: null, regions: [], plants: null, plant: null, search: null, loading: false, error: false }
     );
 
     console.log('REGION ', state.region);
@@ -79,7 +79,7 @@ export default function MainContextProvider({ children }: Props) {
     }, []);
 
     const onRegionChanged = useCallback(async (newRegion: IRegion) => {
-        setState({ region: newRegion, plant: null, plants: null, regions: null, search: null });
+        setState({ region: newRegion, plant: null, plants: null, regions: [], search: null });
 
         if (newRegion) {
             await runApiRequest(() => apiService.getPlantsForRegion(newRegion.regionIdentifier, 1, newRegion.filters?.nativityFilter, newRegion.filters?.edibilityFilter),
@@ -115,7 +115,7 @@ export default function MainContextProvider({ children }: Props) {
     const onPlantSelected = useCallback(async (plantId: number) => {
 
         if (!plantId) {
-            setState({ plant: null, regions: null });
+            setState({ plant: null, regions: [] });
         }
         else {
             await runApiRequest(() => apiService.getPlant(plantId), (res) => {
@@ -131,11 +131,10 @@ export default function MainContextProvider({ children }: Props) {
     /** Showing selected regions for filters */
     const onRegionsChanged = useCallback((zones: Zone[]) => {
         if (zones && zones.length > 0) {
-            const foo = new Map(zones.map(z => [z.slug.toUpperCase(), z]));
-            setState({ regions: foo });
+            setState({ regions: zones });
         }
         else {
-            setState({ regions: null });
+            setState({ regions: [] });
         }
 
     }, []);

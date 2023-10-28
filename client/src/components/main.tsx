@@ -23,7 +23,7 @@ export default function Main({ theme }: Props) {
 
     const [open, setOpen] = useState<boolean>(false);
 
-    const isDrawerView = useMediaQuery('only screen and (max-width: 1280px)');
+    const isDrawerView = useMediaQuery('only screen and (max-width: 900px)');
 
     const toggleDrawer = (newOpen: boolean) => {
         setOpen(newOpen);

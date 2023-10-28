@@ -55,7 +55,7 @@ export default function PlantsList() {
 
     return (
         <>
-            <List ref={listRef} sx={{ maxHeight: drawerView ? '50vh' : '70vh', overflow: 'auto' }}>
+            <List ref={listRef} sx={{ maxHeight: drawerView ? '45vh' : '60vh', overflow: 'auto' }}>
                 {plants.results.data.map((plant: Species, index) =>
                     <ListItem key={plant.id + `_${index}`}>
                         <ListItemAvatar>

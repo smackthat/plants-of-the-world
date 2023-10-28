@@ -4,6 +4,7 @@ import Map, { Source, Layer, FillLayer, LineLayer } from 'react-map-gl';
 import { IMainContext, MainContext } from '../context/maincontext';
 import bbox from '@turf/bbox';
 import { DrawerViewContext } from './main';
+import { useWindowSize } from '@uidotdev/usehooks';
 
 const REGIONS = 'regions';
 const REGIONS_SOURCE = 'regions-source';
@@ -55,6 +56,7 @@ export default function MapboxGlobe() {
     const mapRef = useRef(null);
     const context: IMainContext = useContext(MainContext);
     const { drawerView } = useContext(DrawerViewContext);
+    const size = useWindowSize();
 
     const [cursor, setCursor] = useState<string>('auto');
 
@@ -90,18 +92,18 @@ export default function MapboxGlobe() {
     }, [context.region]);
 
     const nativeOrIntroducedRegionsFilter: boolean | ['in', string, ...any] = useMemo(() => {
-        if (context.regions && context.regions.size > 0) {
-            return ['in', 'LEVEL3_COD', ...Array.from(context.regions.keys())];
+        if (context.regions && context.regions.length > 0) {
+            return ['in', 'LEVEL3_COD', ...context.regions.map(r => r.slug.toUpperCase())];
         }
         return false;
-    }, [context.regions]);
+    }, [JSON.stringify(context.regions)]);
 
     const globeStyle: React.CSSProperties = useMemo(() => {
         if (drawerView) {
             return { width: '100vw', height: 'calc(100vh - 200px)'}; // substract the closed drawer height to center it better
         }
         return { width: '50vw', height: '90vh'};
-    }, [drawerView]);
+    }, [drawerView, size.width]);
 
     const onMouseEnter = useCallback(() => setCursor('pointer'), []);
     const onMouseLeave = useCallback(() => setCursor('auto'), []);
@@ -113,7 +115,7 @@ export default function MapboxGlobe() {
                 maxZoom={7}
                 minZoom={1.5}
                 initialViewState={{
-                    zoom: 2,
+                    zoom: drawerView ? 1 : 2,
                     latitude: 40,
                     longitude: 0
                 }}
@@ -124,6 +126,7 @@ export default function MapboxGlobe() {
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onClick={onClick}
+                localFontFamily='Roboto'
                 mapStyle={'mapbox://styles/jomamist/clk8df6nl00n401qrbk9hgr0g'}>
                 <Source id={REGIONS_SOURCE} type="geojson" data={geoJson2}>
                     <Layer {...regionsLayer} />
