@@ -5,7 +5,8 @@ import MapboxGlobe from './mapbox-globe';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Information from './information';
 import { Context, createContext, useState } from 'react';
-import { Typography, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
+import { Footer } from './footer';
 
 interface Props {
     theme: Theme;
@@ -32,7 +33,7 @@ export default function Main({ theme }: Props) {
     return (
         <ThemeProvider theme={theme}>
             <MainContextProvider>
-                <DrawerViewContext.Provider value={{drawerView: isDrawerView, drawerOpen: open, toggleDrawer: toggleDrawer }}>
+                <DrawerViewContext.Provider value={{ drawerView: isDrawerView, drawerOpen: open, toggleDrawer: toggleDrawer }}>
                     <Grid container flexDirection={isDrawerView ? 'column' : 'row'} alignItems={isDrawerView ? 'center' : 'flex-start'} justifyContent="flex-start" spacing={3}>
                         {isDrawerView ? (
                             <MapboxGlobe />
@@ -65,11 +66,10 @@ export default function Main({ theme }: Props) {
                                 <Information />
                             </Grid>
                         )}
-                        <Grid item xs={12}>
-                            <div className="footer">
-                                <Typography variant="subtitle2">Plant icon made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></Typography>
-                            </div>
-                        </Grid>
+                        {!isDrawerView && (
+                            <Footer />
+                        )}
+
                     </Grid>
                 </DrawerViewContext.Provider>
             </MainContextProvider>

@@ -16,6 +16,7 @@ import PlantsFilters from './plants-filters';
 import Box from '@mui/material/Box';
 import { DrawerViewContext } from './main';
 import ToggleableCardTitle from './toggleable-card-title';
+import { Footer } from './footer';
 
 export default function Information() {
 
@@ -130,6 +131,7 @@ export default function Information() {
                     left: 0,
                 }}>
                     {view}
+                    <Footer />
                 </Box>
             ) : (
                 <>

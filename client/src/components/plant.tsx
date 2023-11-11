@@ -41,7 +41,7 @@ export default function Plant() {
                 subheader={a.plant.scientific_name}
             >
             </CardHeader>
-            <CardContent sx={{ ...displayStyle, maxHeight: drawerView ? '60vh' : '80vh', overflow: drawerView ? 'auto' : 'none' }}>
+            <CardContent sx={{ ...displayStyle, maxHeight: drawerView ? '60vh' : '75vh', overflow: drawerView ? 'auto' : 'none' }}>
                 <PlantAvatar
                     img={{ imgSrc: a.plant.image_url, title: a.plant.common_name ?? a.plant.scientific_name }}
                     size={'200px'}

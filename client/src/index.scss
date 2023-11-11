@@ -1,7 +1,7 @@
 body {
   margin: 20px;
   overflow: hidden;
-  background: linear-gradient(to bottom right, rgb(188, 224, 199), rgb(208, 243, 143));
+  background: linear-gradient(to right, #b3d8bf, #d0f38f);
   font-family: 'Roboto';
 }
 
@@ -36,10 +36,16 @@ button.mapboxgl-ctrl-attrib-button {
 }
 
 div.mapboxgl-ctrl-attrib-inner {
-  font-size: 14px;
+  font-size: 12px;
 
   a + a {
     padding-left: 0.5em;
+  }
+
+  @media only screen and (max-width: 900px) {
+    position: absolute;
+    bottom: 1vh;
+    right: 1vw;
   }
 }
 

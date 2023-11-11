@@ -100,7 +100,7 @@ export default function MapboxGlobe() {
 
     const globeStyle: React.CSSProperties = useMemo(() => {
         if (drawerView) {
-            return { width: '100vw', height: 'calc(100vh - 200px)'}; // substract the closed drawer height to center it better
+            return { width: '100vw', height: 'calc(100vh - 195px)'}; // substract the closed drawer height to center it better
         }
         return { width: '50vw', height: '90vh'};
     }, [drawerView, size.width]);
@@ -113,7 +113,7 @@ export default function MapboxGlobe() {
             <Map
                 mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
                 maxZoom={7}
-                minZoom={1.5}
+                minZoom={drawerView ? 1 : 1.5}
                 initialViewState={{
                     zoom: drawerView ? 1 : 2,
                     latitude: 40,
