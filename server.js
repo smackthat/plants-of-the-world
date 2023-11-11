@@ -1,11 +1,16 @@
 const express = require('express');
 const fetch = require('node-fetch');
+const https = require('https');
 require('dotenv').config();
 
 const app = express();
 app.set("port", process.env.PORT || 3001);
 
-const apiUrl = 'https://trefle.io/api/v1/';
+const apiUrl = 'https://trefle.io/api/v1';
+
+const httpsAgent = new https.Agent({
+    rejectUnauthorized: false,
+});
 
 //#region Plants
 
@@ -16,6 +21,8 @@ app.get("/api/plants/forRegion/:regionId", async (req, res) => {
     const page = req.query.page || 1;
     const establishmentFilter = req.query.nativityFilter;
     const edibilityFilter = req.query.edibilityFilter;
+    const imagesCountMin = req.query.imagesCountMin;
+    const imagesCountMax = req.query.imagesCountMax;
 
     let queryString = `${apiUrl}/plants?zone_id=${regionId}&order[common_name]=asc&token=${process.env.TREFLE_API_KEY}&page=${page}`;
 
@@ -24,10 +31,18 @@ app.get("/api/plants/forRegion/:regionId", async (req, res) => {
     }
     if (edibilityFilter) {
         if (edibilityFilter == "true") {
-            queryString += `&filter%5Bedible%5D=true`;
+            queryString += '&filter%5Bedible%5D=true';
         }
         else {
-            queryString += `&filter%5Bedible%5D=false`;
+            queryString += '&filter%5Bedible%5D=false';
+        }
+    }
+    if (imagesCountMin && imagesCountMax) {
+        if (imagesCountMin === '0' && imagesCountMax === '0') {
+            queryString += '&range%5Bimages_count%5D=,1';
+        }
+        else {
+            queryString += `&range%5Bimages_count%5D=${imagesCountMin},${imagesCountMax}`;
         }
     }
 
@@ -68,10 +83,12 @@ if (process.env.NODE_ENV === "production") {
 
 async function runRequest(reqString, res) {
 
+    console.log('RUNNING A REQUEST: ', reqString);
+
     try {
-        const response = await fetch(reqString);
+        const response = await fetch(reqString, { agent: httpsAgent });
         return await response.json();
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.code);
     }
 }

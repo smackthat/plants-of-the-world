@@ -22,6 +22,7 @@ export interface IRegion {
     filters?: {
         nativityFilter?: 'native' | 'introduced';
         edibilityFilter?: string;
+        imagesCountFilter?: { min: number, max: number };
     }
 }
 
@@ -82,13 +83,18 @@ export default function MainContextProvider({ children }: Props) {
         setState({ region: newRegion, plant: null, plants: null, regions: [], search: null });
 
         if (newRegion) {
-            await runApiRequest(() => apiService.getPlantsForRegion(newRegion.regionIdentifier, 1, newRegion.filters?.nativityFilter, newRegion.filters?.edibilityFilter),
-                (res) => {
-                    setState({ plants: { results: res, page: 1 } });
-                },
-                () => {
-                    setState({ region: null });
-                });
+            await runApiRequest(() => apiService.getPlantsForRegion(
+                newRegion.regionIdentifier,
+                1,
+                newRegion.filters?.nativityFilter,
+                newRegion.filters?.edibilityFilter,
+                newRegion.filters?.imagesCountFilter),
+            (res) => {
+                setState({ plants: { results: res, page: 1 } });
+            },
+            () => {
+                setState({ region: null });
+            });
         }
 
     }, [apiService]);
@@ -97,7 +103,11 @@ export default function MainContextProvider({ children }: Props) {
 
         // use region plants list
         if (state.region?.regionIdentifier) {
-            await runApiRequest(() => apiService.getPlantsForRegion(state.region.regionIdentifier, page, state.region.filters?.nativityFilter, state.region.filters?.edibilityFilter), (res) => {
+            await runApiRequest(() => apiService.getPlantsForRegion(
+                state.region.regionIdentifier, page, 
+                state.region.filters?.nativityFilter, 
+                state.region.filters?.edibilityFilter,
+                state.region.filters?.imagesCountFilter), (res) => {
                 setState({ plants: { results: res, page: page } });
             });
         }

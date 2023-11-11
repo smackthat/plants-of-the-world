@@ -105,13 +105,20 @@ export default class ApiService {
 
     //#region  Public methods
 
-    public async getPlantsForRegion(regionId: string, page = 1, nativityFilter?: 'native' | 'introduced', edibilityFilter?: string): Promise<IResultsWithMeta<Species>> {
+    public async getPlantsForRegion(
+        regionId: string,
+        page = 1,
+        nativityFilter?: 'native' | 'introduced',
+        edibilityFilter?: string,
+        imagesCountFilter?: { min: number, max: number }): Promise<IResultsWithMeta<Species>> {
 
         const plants = await this.get(`${plantsUrl}/forRegion/${regionId}`, {
             params: {
                 page,
                 nativityFilter,
-                edibilityFilter
+                edibilityFilter,
+                imagesCountMin: imagesCountFilter?.min,
+                imagesCountMax: imagesCountFilter?.max,
             }
         });
         return plants.data;
