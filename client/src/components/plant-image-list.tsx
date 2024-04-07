@@ -63,8 +63,8 @@ function PlantImageList() {
 
     return (
 
-        <StyledDiv sx={{overflow: drawerView ? 'none' : 'auto'}}>
-            <ImageList rowHeight={150} cols={3}>
+        <StyledDiv>
+            <ImageList rowHeight={150} cols={3} sx={{ width: drawerView ? '90vw' : '35vw'}}>
                 {plantImages}
             </ImageList>
             <ImageModal img={selectedImage} setImage={setSelectedImage}></ImageModal>

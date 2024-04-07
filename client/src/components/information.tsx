@@ -71,7 +71,7 @@ export default function Information() {
                     }
                     title={<ToggleableCardTitle title={'Plants of ' + a.region.regionName} />}>
                 </CardHeader>
-                <CardContent>
+                <CardContent sx={{ p: 0}}>
                     <PlantsFilters />
                     <PlantsList />
                 </CardContent>

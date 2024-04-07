@@ -1,12 +1,12 @@
 body {
-  margin: 20px;
   overflow: hidden;
-  background: linear-gradient(to right, #b3d8bf, #d0f38f);
+  background: linear-gradient(to bottom, #b3c9d8, #d0f38f);
   font-family: 'Roboto';
+  height: 100vh;
 }
 
 #root {
-  margin: 20px auto;
+  margin: auto;
 }
 
 ol,
@@ -16,10 +16,13 @@ ul {
 
 a {
   text-decoration: none;
+
+  &:visited {
+    color: rgb(0, 0, 238);
+  }
 }
 
 .footer {
-  padding: auto;
 
   &:only-child{
     text-align: end;
@@ -46,10 +49,17 @@ div.mapboxgl-ctrl-attrib-inner {
     position: absolute;
     bottom: 1vh;
     right: 1vw;
+    padding-bottom: 0.5em;
   }
 }
 
 .MuiDrawer-root > .MuiPaper-root {
   height: calc(60% - 80px);
   overflow-y: visible;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }

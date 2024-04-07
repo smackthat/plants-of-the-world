@@ -1,11 +1,11 @@
 import { Forest, Restaurant, Image } from '@mui/icons-material';
-import { ListItemText } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import { useContext, useState } from 'react';
 import { IMainContext, MainContext } from '../context/maincontext';
+import ListItemText from '@mui/material/ListItemText';
 
 
 export default function PlantsFilters() {
@@ -41,7 +41,7 @@ export default function PlantsFilters() {
     };
 
     return (
-        <Stack className="plants-filters" direction="row" spacing={1}>
+        <Stack className="plants-filters" direction="row" spacing={1} padding={1} sx={{ background: (theme) => theme.palette.grey[100]}}>
             <Chip label="Nativity" icon={<Forest />} variant={nativityChipVariant} aria-haspopup="true" onClick={(e) => handleChipClick(e, setNativityAnchor)} />
             <Chip label="Edibility" icon={<Restaurant />} variant={edibilityChipVariant} aria-haspopup="true" onClick={(e) => handleChipClick(e, setEdiblesAnchor)} />
             <Chip label="Images" icon={<Image />} variant={imagedCountChipVariant} aria-haspopup="true" onClick={(e) => handleChipClick(e, setImagesAnchor)} />

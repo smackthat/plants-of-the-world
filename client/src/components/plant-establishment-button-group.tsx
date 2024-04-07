@@ -37,9 +37,17 @@ export const PlantEstablishmentButtonGroup = () => {
 
     const regionsTooltipTitle = (
         <Box overflow="auto" maxHeight="25em">
-            {regions.map((r) =>
-                <Typography key={r.slug}>{r.name}</Typography>
+
+            {regions?.length > 0 ? (
+                <>
+                    {regions.map((r) =>
+                        <Typography key={r.slug}>{r.name}</Typography>
+                    )}
+                </>
+            ) : (
+                <Typography>No regions.</Typography>
             )}
+
 
         </Box>
     );

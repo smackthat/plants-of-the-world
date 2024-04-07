@@ -1,32 +1,29 @@
 {
-  "name": "plants-of-the-world",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"npm run server\" \"npm run client\"",
-    "client": "node startClient.js",
-    "server": "nodemon server.js",
-    "npm-installs": "npm install && cd client && npm install"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/smackthat/plants-of-the-world.git"
-  },
-  "author": "Johannes Stenberg",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/smackthat/plants-of-the-world/issues"
-  },
-  "homepage": "https://github.com/smackthat/plants-of-the-world#readme",
-  "dependencies": {
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "node-fetch": "^2.6.1"
-  },
-  "devDependencies": {
-    "concurrently": "^5.3.0",
-    "nodemon": "^2.0.7"
+    "name": "plant-o-globe",
+    "version": "1.0.0",
+    "description": "",
+    "workspaces": [
+        "server",
+        "client"
+    ],
+    "scripts": {
+      "start": "concurrently \"npm run server\" \"npm run client\"",
+      "client": "node startClient.js",
+      "server": "node startServer.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/smackthat/plants-of-the-world.git"
+    },
+    "author": "Johannes Stenberg",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/smackthat/plants-of-the-world/issues"
+    },
+    "homepage": "https://github.com/smackthat/plants-of-the-world#readme",
+    "devDependencies": {
+      "concurrently": "^5.3.0",
+      "nodemon": "^2.0.7"
+    }
   }
-}
+  

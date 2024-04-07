@@ -1,12 +1,12 @@
 import { Theme, ThemeProvider } from '@mui/material/styles';
 import MainContextProvider from '../context/maincontext';
-import Grid from '@mui/material/Grid';
 import MapboxGlobe from './mapbox-globe';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Information from './information';
 import { Context, createContext, useState } from 'react';
-import { useMediaQuery } from '@mui/material';
 import { Footer } from './footer';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Stack from '@mui/material/Stack';
 
 interface Props {
     theme: Theme;
@@ -34,18 +34,18 @@ export default function Main({ theme }: Props) {
         <ThemeProvider theme={theme}>
             <MainContextProvider>
                 <DrawerViewContext.Provider value={{ drawerView: isDrawerView, drawerOpen: open, toggleDrawer: toggleDrawer }}>
-                    <Grid container flexDirection={isDrawerView ? 'column' : 'row'} alignItems={isDrawerView ? 'center' : 'flex-start'} justifyContent="flex-start" spacing={3}>
+                    <Stack direction={isDrawerView ? 'column' : 'row'} alignItems={isDrawerView ? 'center' : 'flex-start'} justifyContent="flex-start" spacing={3}>
                         {isDrawerView ? (
                             <MapboxGlobe />
                         ) : (
-                            <Grid item>
+                            <Stack>
                                 <MapboxGlobe />
-                            </Grid>
+                            </Stack>
                         )}
 
 
                         {isDrawerView ? (
-                            <Grid item>
+                            <Stack>
                                 <SwipeableDrawer
                                     anchor="bottom"
                                     variant="persistent"
@@ -59,18 +59,19 @@ export default function Main({ theme }: Props) {
                                     open={open} >
                                     <Information />
                                 </SwipeableDrawer>
-                            </Grid>
+                            </Stack>
 
                         ) : (
-                            <Grid item width={'40vw'}>
+                            <Stack width={'40vw'}>
                                 <Information />
-                            </Grid>
-                        )}
-                        {!isDrawerView && (
-                            <Footer />
+                            </Stack>
                         )}
 
-                    </Grid>
+
+                    </Stack>
+                    {!isDrawerView && (
+                        <Footer />
+                    )}
                 </DrawerViewContext.Provider>
             </MainContextProvider>
         </ThemeProvider >

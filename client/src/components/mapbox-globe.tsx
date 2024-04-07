@@ -5,6 +5,8 @@ import { IMainContext, MainContext } from '../context/maincontext';
 import bbox from '@turf/bbox';
 import { DrawerViewContext } from './main';
 import { useWindowSize } from '@uidotdev/usehooks';
+import Box from '@mui/material/Box';
+import { PlantEstablishmentActionButton } from './plant-establishment-action-button';
 
 const REGIONS = 'regions';
 const REGIONS_SOURCE = 'regions-source';
@@ -74,7 +76,7 @@ export default function MapboxGlobe() {
                         [maxLng, maxLat]
                     ],
                     {
-                        padding: 40, duration: 1500
+                        padding: 40, duration: 2000
                     }
                 );
             }
@@ -109,10 +111,14 @@ export default function MapboxGlobe() {
     const onMouseLeave = useCallback(() => setCursor('auto'), []);
 
     return (
-        <div>
+        <Box position="relative">
+            {context.regions.length > 0 && (
+                <PlantEstablishmentActionButton />
+            )}
+   
             <Map
                 mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-                maxZoom={7}
+                maxZoom={8}
                 minZoom={drawerView ? 1 : 1.5}
                 initialViewState={{
                     zoom: drawerView ? 1 : 2,
@@ -135,6 +141,6 @@ export default function MapboxGlobe() {
                     <Layer {...regionFill} />
                 </Source>
             </Map>
-        </div>
+        </Box>
     );
 }

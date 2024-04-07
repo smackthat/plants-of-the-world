@@ -9,7 +9,7 @@ app.set("port", process.env.PORT || 3001);
 const apiUrl = 'https://trefle.io/api/v1';
 
 const httpsAgent = new https.Agent({
-    rejectUnauthorized: false,
+    rejectUnauthorized: true,
 });
 
 //#region Plants
@@ -77,9 +77,9 @@ app.listen(app.get("port"), () => {
     console.log(`Server listening at port ${app.get("port")}`);
 });
 
-if (process.env.NODE_ENV === "production") {
-    app.use(express.static("client/build"));
-}
+// if (process.env.NODE_ENV === "production") {
+//     app.use(express.static("../client/build"));
+// }
 
 async function runRequest(reqString, res) {
 
